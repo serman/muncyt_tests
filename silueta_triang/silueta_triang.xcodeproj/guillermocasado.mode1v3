@@ -266,8 +266,10 @@
 								<string>E4B69B4A0A3A1720003C02F2</string>
 								<string>E4B69E1C0A3A1BDC003C02F2</string>
 								<string>BB4B014C10F69532006C3DED</string>
-								<string>7F50D404195C44B2008BEADF</string>
-								<string>7F50D436195C44B2008BEADF</string>
+								<string>7F20B5B8195CB95A002DB595</string>
+								<string>7F20B5E5195CB95B002DB595</string>
+								<string>7F20B5E6195CB95B002DB595</string>
+								<string>7F20B5EA195CB95B002DB595</string>
 								<string>E45BE5980E8CC70C009D7055</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>1C37FABC05509CD000000102</string>
@@ -330,12 +332,17 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>7F20B58D195CB8D1002DB595</string>
+										<string>7F20B621195CD385002DB595</string>
 										<key>history</key>
 										<array>
 											<string>7F50D485195C93E2008BEADF</string>
 											<string>7F50D4F4195CAC25008BEADF</string>
-											<string>7FE14FAD195CB8A000016B45</string>
+											<string>7F20B604195CD1A2002DB595</string>
+											<string>7F20B605195CD1A2002DB595</string>
+											<string>7F20B606195CD1A2002DB595</string>
+											<string>7F20B607195CD1A2002DB595</string>
+											<string>7F20B608195CD1A2002DB595</string>
+											<string>7F20B609195CD1A2002DB595</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -533,6 +540,10 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
+		<string>7F20B613195CD1A2002DB595</string>
+		<string>7F20B614195CD1A2002DB595</string>
+		<string>1C78EAAD065D492600B07095</string>
+		<string>1CD10A99069EF8BA00B06720</string>
 		<string>7FBE4FDB19086BFF00CDEAB8</string>
 		<string>/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/silueta_triang.xcodeproj</string>
 	</array>
@@ -658,8 +669,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {316, 198}}</string>
-											<string>{{316, 0}, {378, 198}}</string>
+											<string>{{0, 0}, {316, 201}}</string>
+											<string>{{316, 0}, {378, 201}}</string>
 										</array>
 									</dict>
 									<key>VerticalSplitView</key>
@@ -674,8 +685,8 @@
 										<string>yes</string>
 										<key>sizes</key>
 										<array>
-											<string>{{0, 0}, {694, 198}}</string>
-											<string>{{0, 198}, {694, 183}}</string>
+											<string>{{0, 0}, {694, 201}}</string>
+											<string>{{0, 201}, {694, 180}}</string>
 										</array>
 									</dict>
 								</dict>
@@ -708,7 +719,7 @@
 										<real>148</real>
 									</array>
 									<key>Frame</key>
-									<string>{{316, 0}, {378, 198}}</string>
+									<string>{{316, 0}, {378, 201}}</string>
 									<key>RubberWindowFrame</key>
 									<string>42 310 694 422 0 0 1280 778 </string>
 								</dict>
@@ -736,13 +747,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>7FE14FA6195CB89A00016B45</string>
+				<string>7F20B60B195CD1A2002DB595</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>7FE14FA7195CB89A00016B45</string>
-				<string>7FE14FA8195CB89A00016B45</string>
-				<string>7FE14FA9195CB89A00016B45</string>
-				<string>7FE14FAA195CB89A00016B45</string>
-				<string>7FE14FAB195CB89A00016B45</string>
+				<string>7F20B60C195CD1A2002DB595</string>
+				<string>7F20B60D195CD1A2002DB595</string>
+				<string>7F20B60E195CD1A2002DB595</string>
+				<string>7F20B60F195CD1A2002DB595</string>
+				<string>7F20B610195CD1A2002DB595</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -861,8 +872,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -898,7 +907,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>7F50D493195C93E2008BEADF</string>
+				<string>7F20B611195CD1A2002DB595</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
@@ -908,7 +917,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C78EAAD065D492600B07095</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>

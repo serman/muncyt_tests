@@ -74,7 +74,7 @@ void testApp::update() {
 					if(bSoloEnContorno) {
 						// Si no va, quitar triangs cuyo centro este fuera del contorno.
 						triangContMesh.clear();
-						triangContMesh.setMode(OF_PRIMITIVE_LINE_LOOP);
+						triangContMesh.setMode(OF_PRIMITIVE_TRIANGLES);
 						ofMesh tt = triangulation.triangleMesh;
 						
 						// Con vertex: no queda bien. Se nota la implementacion del algoritmo
@@ -148,20 +148,19 @@ void testApp::draw() {
 			ofPolyline contSimple = contourFinder.getPolyline(0);
 			contSimple.simplify();
 			ofPolyline resampled = contSimple.getResampledBySpacing(25);
-			ofSetColor(ofColor::yellow);
+			ofSetColor(ofColor::darkRed);
 			resampled.draw();
 			ofDrawBitmapString(ofToString(resampled.size()), resampled.getCentroid2D()+ofPoint(0,0));
 		ofPopStyle();
 		
 		// triangulacion
 		if(doTriang) {
-			ofNoFill();
+//			ofNoFill();
 			ofSetColor(ofColor::wheat);
 			if(!bSoloEnContorno) {
 				triangulation.draw();
 			}
 			else {
-				ofNoFill();
 				triangContMesh.draw();
 			}
 			// tambien se puede dibujar con Mesh
