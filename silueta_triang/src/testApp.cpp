@@ -77,7 +77,7 @@ void testApp::update() {
 						triangContMesh.setMode(OF_PRIMITIVE_TRIANGLES);
 						ofMesh tt = triangulation.triangleMesh;
 						
-						// Con vertex: no queda bien. Se nota la implementacion del algoritmo
+						// Con vertex: no queda bien. Se nota la implementacion del algoritmo en vertical, o algo asi
 //						vector<ofVec3f> verts = tt.getVertices();
 //						for(int i=0; i<verts.size()-2; i++) {
 //							ofVec3f a = verts[i];
@@ -106,8 +106,6 @@ void testApp::update() {
 								triangContMesh.addVertex(c);
 							}
 						}
-	
-						
 					}
 					
 				}
@@ -117,9 +115,6 @@ void testApp::update() {
 					contornoTes.clear();
 					tessel.tessellateToMesh(resampled, OF_POLY_WINDING_ODD, contornoTes);
 				}
-				
-				
-				   
 			}
 		}
 		else {
@@ -162,7 +157,7 @@ void testApp::draw() {
 			else {
 				triangContMesh.drawWireframe();
 				// si se quiere filled:
-				// 				triangContMesh.draw();
+				// triangContMesh.draw();
 			}
 			// tambien se puede dibujar con Mesh
 			// Mola porque se puede texturizar y aplicar vertex_shaders
@@ -182,11 +177,11 @@ void testApp::draw() {
 	
 	ofSetColor(255);
 	ofDrawBitmapString("fr: " + ofToString(ofGetFrameRate()), 10,10);
-	ofDrawBitmapString("threshold: " + ofToString(thres), 10,25);
+	ofDrawBitmapString("(mouseY+click) threshold: " + ofToString(thres), 10,25);
 	ofDrawBitmapString("(q/a) learning rate: " + ofToString(lr), 10,40);
 	ofDrawBitmapString("(t) Do Delaunay: " + ofToString(doTriang), 10,55);
-	ofDrawBitmapString("  (c) Solo contorno: " + ofToString(bSoloEnContorno), 10,70);
-	ofDrawBitmapString("  (x) Add xtra points: " + ofToString(bAddPts), 10,85);
+	ofDrawBitmapString("   (c) Solo contorno: " + ofToString(bSoloEnContorno), 10,70);
+	ofDrawBitmapString("   (x) Add xtra points: " + ofToString(bAddPts), 10,85);
 	ofDrawBitmapString("(r) Do Tessell: " + ofToString(doTessel), 10,100);
 	
 }
