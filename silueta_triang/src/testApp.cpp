@@ -22,7 +22,7 @@ void testApp::setup() {
 	triangulation.reset();
 	doTriang = true;
 	
-	doTessel = true;
+	doTessel = false;
 	
 }
 
@@ -106,8 +106,6 @@ void testApp::update() {
 								triangContMesh.addVertex(c);
 							}
 						}
-						
-	
 	
 						
 					}
@@ -155,13 +153,16 @@ void testApp::draw() {
 		
 		// triangulacion
 		if(doTriang) {
-//			ofNoFill();
+			ofNoFill();
 			ofSetColor(ofColor::wheat);
+			ofNoFill();
 			if(!bSoloEnContorno) {
 				triangulation.draw();
 			}
 			else {
-				triangContMesh.draw();
+				triangContMesh.drawWireframe();
+				// si se quiere filled:
+				// 				triangContMesh.draw();
 			}
 			// tambien se puede dibujar con Mesh
 			// Mola porque se puede texturizar y aplicar vertex_shaders
