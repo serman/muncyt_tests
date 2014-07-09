@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxFaceTracker.h"
 
 #include "Marco.h"
 
@@ -20,6 +21,16 @@ public:
 	void setupObjFinders();
 	
 	Marco marco;
+	
+	
+	ofxFaceTracker	tracker;
+	void			update_faceTracker();	
+	ofMesh		leftRectImg, rightRectImg;
+	ofVec2f		position;
+	float		scale;
+	ofMatrix4x4 rotationMatrix;
+	
+	
 	
 	vector<ofColor> colores;
 	

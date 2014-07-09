@@ -1,10 +1,12 @@
 #include "scanner_faces.h"
+#include "utilsProcamtool.h"
 
 using namespace ofxCv;
 using namespace cv;
 
 void scanner_faces::setup() {
 	ofSetVerticalSync(true);
+	ofEnableSmoothing();
 	
 	// utils
 	colores.push_back(ofColor::paleVioletRed);
@@ -28,15 +30,15 @@ void scanner_faces::setup() {
 	id_modo_haar_act = 0;
 	
 	setupObjFinders();
+
+	// FaceTracker
+	tracker.setup();
+	
 	
 	// start
 	cam.initGrabber(640, 480);
 
 	// setup marco
-//	float wMarco = ofGetWidth()*0.7;
-//	float hMarco = wMarco*ofGetHeight()/ofGetWidth();
-//	float xMarco = (ofGetWidth()-wMarco)/2;
-//	float yMarco = (ofGetHeight()-hMarco)/2;
 	float wMarco = cam.width*0.7;
 	float hMarco = wMarco*cam.height/cam.width;
 	float xMarco = (cam.width-wMarco)/2;
@@ -46,6 +48,9 @@ void scanner_faces::setup() {
 	marco.setRectExt(ofRectangle(0,0, cam.width, cam.height));
 //	marco.setRectExt(ofRectangle(0,0, ofGetWidth(), ofGetHeight()));
 	marco.setRect(ofRectangle(xMarco, yMarco, wMarco, hMarco));
+	
+	
+	
 	
 	// escenas
 	setupEscenas();
@@ -70,7 +75,7 @@ void scanner_faces::setupObjFinders() {
 	//finder ojos;
 	finderEyes.setup("haars/haarcascade_eye.xml");
 	finderEyes.setPreset(ObjectFinder::Fast);
-		
+
 }
 
 
@@ -110,11 +115,70 @@ void scanner_faces::update() {
 			   
 			   
 		}
+		
+		// update faceTracker
+		tracker.update(toCv(cam));
+		update_faceTracker();
 	}
 	
 	// Update una cosa u otra segœn el modo
 	updateEscena();
 	
+}
+
+void scanner_faces::update_faceTracker() {
+	position = tracker.getPosition();
+	scale = tracker.getScale();
+	rotationMatrix = tracker.getRotationMatrix();
+	if(tracker.getFound()) {
+		ofVec2f
+		leftOuter = tracker.getImagePoint(36),
+		leftInner = tracker.getImagePoint(39),
+		rightInner = tracker.getImagePoint(42),
+		rightOuter = tracker.getImagePoint(45);
+		
+		ofPolyline leftEye = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
+		ofPolyline rightEye = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE);
+		
+		ofVec2f leftCenter = leftEye.getBoundingBox().getCenter();
+		ofVec2f rightCenter = rightEye.getBoundingBox().getCenter();
+		
+		float leftRadius = (leftCenter.distance(leftInner) + leftCenter.distance(leftOuter)) / 2;
+		float rightRadius = (rightCenter.distance(rightInner) + rightCenter.distance(rightOuter)) / 2;
+		
+		ofVec2f
+		leftOuterObj = tracker.getObjectPoint(36),
+		leftInnerObj = tracker.getObjectPoint(39),
+		rightInnerObj = tracker.getObjectPoint(42),
+		rightOuterObj = tracker.getObjectPoint(45);
+		
+		ofVec3f upperBorder(0, -3.5, 0), lowerBorder(0, 2.5, 0);
+		ofVec3f leftDirection(-1, 0, 0), rightDirection(+1, 0, 0);
+		float innerBorder = 1.5, outerBorder = 2.5;
+		
+		ofMesh leftRect, rightRect;
+		leftRect.setMode(OF_PRIMITIVE_LINE_LOOP);
+		leftRect.addVertex(leftOuterObj + upperBorder + leftDirection * outerBorder);
+		leftRect.addVertex(leftInnerObj + upperBorder + rightDirection * innerBorder);
+		leftRect.addVertex(leftInnerObj + lowerBorder + rightDirection * innerBorder);
+		leftRect.addVertex(leftOuterObj + lowerBorder + leftDirection * outerBorder);
+		rightRect.setMode(OF_PRIMITIVE_LINE_LOOP);
+		rightRect.addVertex(rightInnerObj+ upperBorder + leftDirection * innerBorder);
+		rightRect.addVertex(rightOuterObj + upperBorder + rightDirection * outerBorder);
+		rightRect.addVertex(rightOuterObj + lowerBorder + rightDirection * outerBorder);
+		rightRect.addVertex(rightInnerObj + lowerBorder + leftDirection * innerBorder);
+		
+		ofPushMatrix();
+		ofSetupScreenOrtho(640, 480, OF_ORIENTATION_UNKNOWN, true, -1000, 1000);
+		ofScale(1, 1, -1);
+		ofTranslate(position);
+		applyMatrix(rotationMatrix);
+		ofScale(scale, scale, scale);
+		leftRectImg = getProjectedMesh(leftRect);
+		rightRectImg = getProjectedMesh(rightRect);		
+		ofPopMatrix();
+	}
+		
 }
 
 
@@ -146,6 +210,8 @@ void scanner_faces::draw() {
 //			ofRectangle caraRect = finder.getObjectSmoothed(0);
 			ofNoFill();
 			ofRect(faceRect);
+			
+			// Parrilla
 			// H
 			for(int i=1; i<10; i++) {
 				ofLine(faceRect.x, faceRect.y+faceRect.height/10*i , faceRect.x+faceRect.width, faceRect.y+faceRect.height/10*i);
@@ -160,11 +226,13 @@ void scanner_faces::draw() {
 			ofLine(faceRect.x+faceRect.width*3/4, faceRect.y, faceRect.x+faceRect.width*3/4, faceRect.y+faceRect.height);
 			
 			
-			
-			if(!caraOut) 			ofSetColor(ofColor::blue);
-			else					ofSetColor(ofColor::red);
-			ofRect(faceRectAmpl);
-			
+			// Colores: http://www.html-color-names.com/color-chart.php
+			if(!caraOut) 			ofSetColor(ofColor::limeGreen);
+			else					ofSetColor(ofColor::crimson);
+			ofPushStyle();
+			ofSetLineWidth(10);
+			ofRectRounded(faceRectAmpl, 2);
+			ofPopStyle();
 			
 			
 			ofSetColor(255);
