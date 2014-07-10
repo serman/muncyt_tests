@@ -27,5 +27,12 @@ public:
 	vector		<ofPtr<ofxBox2dRect> >		boxes;			  //	defalut box2d rects
 	
 	bool	isKeyPressed;
+	
+	bool	isMousePressed;
+	
+	ofImage bola;
+	float ladoPart1, ladoPart2;
+	
+	vector<ofColor> coloresBN;
 };
 

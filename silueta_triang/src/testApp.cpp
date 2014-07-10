@@ -24,7 +24,25 @@ void testApp::setup() {
 	
 	doTessel = false;
 	
+	cargaColores();
+	bFill = false;
 }
+
+
+
+void testApp::cargaColores() {
+	// paleta de colores fluor
+	// http://www.colourlovers.com/palette/970972/FLUOR
+	//
+	colorFluor.clear();
+	colorFluor.push_back(ofColor::fromHex(0x0DE0FC));	// melting flowers
+	colorFluor.push_back(ofColor::fromHex(0x38FC48));	// Dead Nuclear
+	colorFluor.push_back(ofColor::fromHex(0xF938FC));	// Calcinha
+	colorFluor.push_back(ofColor::fromHex(0xFA00AB));	// ow!
+	colorFluor.push_back(ofColor::fromHex(0xDFFC00));	// Limei Green
+	
+}
+
 
 void testApp::update() {
 	cam.update();
@@ -183,6 +201,7 @@ void testApp::draw() {
 	ofDrawBitmapString("   (c) Solo contorno: " + ofToString(bSoloEnContorno), 10,70);
 	ofDrawBitmapString("   (x) Add xtra points: " + ofToString(bAddPts), 10,85);
 	ofDrawBitmapString("(r) Do Tessell: " + ofToString(doTessel), 10,100);
+	ofDrawBitmapString("(f) Fill Delaunay: " + ofToString(bFill), 10,120);
 	
 }
 
@@ -207,6 +226,7 @@ void testApp::keyPressed(int key) {
 	else if(key=='r') doTessel=!doTessel;
 	else if(key=='c') bSoloEnContorno=!bSoloEnContorno;
 	else if(key=='x') bAddPts=!bAddPts;
+	else if(key=='f') bFill=!bFill;
 		
 	
 }

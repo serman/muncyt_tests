@@ -29,7 +29,7 @@ void testApp::setup() {
 	
 	aro2.wrot=1.05;
 	
-	for(int i=0; i<10; i++) {
+	for(int i=0; i<60; i++) {
 		ofPoint p=ofPoint(ofRandom(ofGetWidth()), ofRandom(ofGetHeight()));
 		Ring rr;
 		rr.setup(p, ofRandom(10,40));		

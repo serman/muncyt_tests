@@ -38,4 +38,12 @@ public:
 	ofTessellator tessel;
 	ofMesh contornoTes;	// contorno teselado
 	
+	
+	// Colores
+	vector<ofColor> colorFluor;
+	void cargaColores();
+	
+	
+	bool bFill;
+	
 };
