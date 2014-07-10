@@ -26,6 +26,14 @@ public:
 	StringL		stringL1, stringL2, stringL3;
 	StringC		stringC1, stringC2, stringC3;
 	
+	
+	Ring aro1, aro2;
+	vector<Ring> aros;
+	
+	
+	vector<ofColor> colorFluor;
+	void cargaColores();
+	
 };
 
 

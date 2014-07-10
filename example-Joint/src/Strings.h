@@ -123,7 +123,7 @@ public:
 	//	~StringC();
 	
 	// setup
-	void setup(b2World * _world2d, ofPoint p1, float _r, int _nNodos, float fJoint = 0.5) {
+	void setup(b2World * _world2d, ofPoint p1, float _r, int _nNodos, float fJoint = 0.5, float fJointR = 0.5) {
 		world2d = _world2d;
 		
 //		anchor.setPhysics(150.0, 0.83, 0.9);
@@ -136,7 +136,7 @@ public:
 		
 		ofVec2f v1 = ofVec2f(p1.x,p1.y);
 		float lengthJoint = circ/nNodos*fJoint;
-		float lengthJointAnchor = radio*0.6;
+		float lengthJointAnchor = radio*fJointR;
 		
 		ofVec2f vr = ofVec2f(radio,0);
 		// first we add just a few circles
@@ -155,7 +155,9 @@ public:
 			
 			int iprev = (i==0)? circles.size()-1 : i-1;
 			ofPtr<ofxBox2dJoint> joint = ofPtr<ofxBox2dJoint>(new ofxBox2dJoint);
-			joint.get()->setup(world2d, circles[iprev].get()->body, circles[i].get()->body);
+//			joint.get()->setup(world2d, circles[iprev].get()->body, circles[i].get()->body);
+			joint.get()->setup(world2d, circles[iprev].get()->body, circles[i].get()->body, 
+							   4.0, .2);// float frequencyHz=4.f, float damping=.5f
 			joint.get()->setLength(lengthJoint);
 			joints.push_back(joint);
 		}
@@ -163,7 +165,9 @@ public:
 		// conexion al anchor
 		for (int i=0; i<circles.size(); i++) {
 			ofPtr<ofxBox2dJoint> joint = ofPtr<ofxBox2dJoint>(new ofxBox2dJoint);
-			joint.get()->setup(world2d, anchor.body, circles[i].get()->body);
+//			joint.get()->setup(world2d, anchor.body, circles[i].get()->body);
+			joint.get()->setup(world2d, anchor.body, circles[i].get()->body, 
+								4.0, .01);// float frequencyHz=4.f, float damping=.5f
 			joint.get()->setLength(lengthJointAnchor);
 			jointsAnchor.push_back(joint);
 		}
@@ -184,6 +188,94 @@ public:
 			ofSetHexColor(0x444342);
 			joints[i].get()->draw();
 		}
+	}
+	
+	
+};
+
+
+class Ring {
+public:	
+	ofMesh aro;
+	ofPoint pos;
+	float rot, wrot;
+	int nPts;
+	float radio;
+	
+	vector<ofVec3f> offsets;
+	
+	ofColor color;
+	
+	//Ring();
+	
+	void setup(ofPoint _pos, float r){
+		rot = 0;
+		wrot = 0;
+		pos = _pos;
+		radio = r;
+		nPts = 18;
+//		aro.setMode(OF_PRIMITIVE_LINE_LOOP);
+		aro.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+
+		for(int i=0;i<2*nPts;i++) {
+			float ang = TWO_PI/(2*nPts)*i;
+			float rr = (i%2==0)? radio : 1.2*radio;
+			aro.addVertex(ofVec3f(rr*cos(ang), rr*sin(ang), 0.0));
+			
+			// offsets para el noise
+			offsets.push_back(ofVec3f(ofRandom(0,100000), ofRandom(0,100000), ofRandom(0,100000)));	
+		}
+		// cerrar el anillo
+		aro.addVertex(aro.getVertex(0));
+		aro.addVertex(aro.getVertex(1));
+		
+		color = ofColor(255);
+		
+	}
+
+	void update() {
+		for(int i=0;i<2*nPts;i++) {
+			ofVec3f vert = aro.getVertex(i);
+			
+			float time = ofGetElapsedTimef();
+			float timeScale = 5.0;
+			float displacementScale = 1.4;
+			ofVec3f timeOffsets = offsets[i];
+			
+			// A typical design pattern for using Perlin noise uses a couple parameters:
+			// ofSignedNoise(time*timeScale+timeOffset)*displacementScale
+			//     ofSignedNoise(time) gives us noise values that change smoothly over time
+			//     ofSignedNoise(time*timeScale) allows us to control the smoothness of our noise (smaller timeScale, smoother values)
+			//     ofSignedNoise(time+timeOffset) allows us to use the same Perlin noise function to control multiple things and have them look as if they are moving independently
+			//     ofSignedNoise(time)*displacementScale allows us to change the bounds of the noise from [-1, 1] to whatever we want 
+			// Combine all of those parameters together, and you've got some nice control over your noise
+			
+			vert.x += (ofSignedNoise(time*timeScale+timeOffsets.x)) * displacementScale;
+			vert.y += (ofSignedNoise(time*timeScale+timeOffsets.y)) * displacementScale;
+			vert.z += (ofSignedNoise(time*timeScale+timeOffsets.z)) * displacementScale;
+			
+			aro.setVertex(i, vert);
+		}
+		// cerrar el anillo
+		aro.setVertex(2*nPts,   aro.getVertex(0));
+		aro.setVertex(2*nPts+1, aro.getVertex(1));
+		
+		rot+=wrot;
+	}
+	
+	void draw() {
+		
+		ofPushMatrix();
+		ofPushStyle();
+		ofSetLineWidth(5);
+		ofTranslate(pos.x,pos.y);
+		ofRotate(rot);
+		ofSetColor(color);
+		aro.draw();
+		
+		ofPopStyle();
+		ofPopMatrix();
+		
 	}
 	
 	
