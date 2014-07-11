@@ -28,6 +28,8 @@ void testApp::setup() {
 	cargaColores();
 	bFill = false;
 	
+	bDrawOld = false;
+	
 	setupGUI();
 }
 
@@ -38,12 +40,14 @@ void testApp::setupGUI() {
     gui->addSpacer();
 	gui->addToggle("Delaunay", doTriang);
 	gui->addToggle("Fill", bFill);
+    gui->addIntSlider("modoFill", 0, 2, &modoFill);
+	gui->addToggle("Draw Old", bDrawOld);
 	gui->addToggle("Add Pts Xtra", bAddPts);
-    gui->addIntSlider("numPointsXtra", 0, 200, numPointsXtra);
+    gui->addIntSlider("numPointsXtra", 0, 500, &numPointsXtra);
     gui->addSpacer();
 	gui->addToggle("Path Tessel", doTessel);
     gui->addSpacer();
-    gui->addSlider("Treshold", 0, 255, thres);
+    gui->addSlider("Treshold", 0, 255, &thres);
     gui->addSpacer();
 	
 	
@@ -60,14 +64,14 @@ void testApp::cargaColores() {
 	// http://www.colourlovers.com/palette/970972/FLUOR
 	//
 	colorFluor.clear();
-	colorFluor.push_back(ofColor::red);	// rojo
-	colorFluor.push_back(ofColor::green);	// green
-	colorFluor.push_back(ofColor::blue);	// blue
-//	colorFluor.push_back(ofColor::fromHex(0x0DE0FC));	// melting flowers
-//	colorFluor.push_back(ofColor::fromHex(0x38FC48));	// Dead Nuclear
-//	colorFluor.push_back(ofColor::fromHex(0xF938FC));	// Calcinha
-//	colorFluor.push_back(ofColor::fromHex(0xFA00AB));	// ow!
-//	colorFluor.push_back(ofColor::fromHex(0xDFFC00));	// Limei Green
+//	colorFluor.push_back(ofColor::red);	// rojo
+//	colorFluor.push_back(ofColor::green);	// green
+//	colorFluor.push_back(ofColor::blue);	// blue
+	colorFluor.push_back(ofColor::fromHex(0x0DE0FC));	// melting flowers
+	colorFluor.push_back(ofColor::fromHex(0x38FC48));	// Dead Nuclear
+	colorFluor.push_back(ofColor::fromHex(0xF938FC));	// Calcinha
+	colorFluor.push_back(ofColor::fromHex(0xFA00AB));	// ow!
+	colorFluor.push_back(ofColor::fromHex(0xDFFC00));	// Limei Green
 	
 }
 
@@ -118,6 +122,9 @@ void testApp::update() {
 					triangulation.triangulate();
 					
 					if(bSoloEnContorno) {
+						
+						triangContMesh_old = triangContMesh;
+						
 						// Si no va, quitar triangs cuyo centro este fuera del contorno.
 						triangContMesh.clear();
 						triangContMesh.setMode(OF_PRIMITIVE_TRIANGLES);
@@ -147,14 +154,41 @@ void testApp::update() {
 							ofVec3f pm = (a+b+c)/3.0;
 							
 							if( resampled.inside(ofPoint(pm.x,pm.y)) ) {
-//								ofColor ctmp = colorFluor[floor(ofRandom(colorFluor.size()))]; 
-								ofColor ctmp = colorFluor[i%colorFluor.size()]; 
+								// supongo el area de imagen dividido en 10 franjas divididas a su vez en 
+								// colorFluor.size() bandas de distinto color
+								float hBandaPpal = cam.height/10;
+								float hBanda = hBandaPpal/colorFluor.size();
+								
+								ofColor ctmpa, ctmpb, ctmpc;
+								if(modoFill==0) {
+									// RANDOM
+									ofColor ctmp = colorFluor[i%colorFluor.size()];
+									ctmpa = ctmp;
+									ctmpb = ctmp;
+									ctmpc = ctmp;
+								}
+								else if(modoFill==1) {
+									// asignar color segun la posicion del punto medio
+										int nBanda = floor(pm.y/hBanda);
+										ofColor ctmp = colorFluor[nBanda%colorFluor.size()];
+										ctmpa = ctmp;
+										ctmpb = ctmp;
+										ctmpc = ctmp;
+								}
+								else if(modoFill==2) {
+									int nBanda = floor(a.y/hBanda);
+									ctmpa = colorFluor[nBanda%colorFluor.size()];
+									nBanda = floor(b.y/hBanda);
+									ctmpb = colorFluor[nBanda%colorFluor.size()];
+									nBanda = floor(c.y/hBanda);
+									ctmpc = colorFluor[nBanda%colorFluor.size()];
+								}
 								triangContMesh.addVertex(a);
 								triangContMesh.addVertex(b);
 								triangContMesh.addVertex(c);
-								triangContMesh.addColor(ctmp);
-								triangContMesh.addColor(ctmp);
-								triangContMesh.addColor(ctmp);
+								triangContMesh.addColor(ctmpa);
+								triangContMesh.addColor(ctmpb);
+								triangContMesh.addColor(ctmpc);
 							}
 						}
 					}
@@ -206,7 +240,14 @@ void testApp::draw() {
 				triangulation.draw();
 			}
 			else {
-				if(bFill)	triangContMesh.draw();
+				if(bFill)	{
+					triangContMesh.draw();
+					if(bDrawOld) {
+						ofEnableBlendMode(OF_BLENDMODE_ADD);
+						triangContMesh_old.draw();
+						ofDisableBlendMode();
+					}
+				}
 				else		triangContMesh.drawWireframe();
 			}
 			// tambien se puede dibujar con Mesh
@@ -270,6 +311,7 @@ void testApp::keyPressed(int key) {
 void testApp::mouseMoved(int x, int y ) {
 }
 
+
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button) {
 //	thres = ofMap(mouseY,0,ofGetHeight(),0,255);
@@ -294,14 +336,14 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 	string name = e.widget->getName(); 
 	int kind = e.widget->getKind(); 
 	
-	if(name == "Treshold")
+	if(name == "xxTreshold")
 	{
 		ofxUISlider *slider = (ofxUISlider *) e.widget; 
 		ofLogNotice("threshold event");		
 		thres = slider->getScaledValue();
 		background.setThresholdValue(thres);
 	}
-	else if(name == "numPointsXtra")
+	else if(name == "xxnumPointsXtra")
 	{
 		ofxUIIntSlider *slider = (ofxUIIntSlider *) e.widget; 
 		ofLogNotice("numPointsXtra event: " + ofToString(slider->getScaledValue()));
@@ -317,6 +359,16 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		bFill = slider->getValue();
 	}	
+	else if(name == "xxmodoFill")
+	{
+		ofxUIIntSlider *slider = (ofxUIIntSlider *) e.widget; 
+		modoFill = slider->getScaledValue();
+	}	
+	else if(name == "Draw Old")
+	{
+		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
+		bDrawOld = slider->getValue();
+	}	
 	else if(name == "Add Pts Xtra")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
@@ -327,7 +379,6 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		doTessel = slider->getValue();
 	}	
-	
 	
 }
 //--------------------------------------------------------------

@@ -36,6 +36,7 @@ public:
 	bool	bAddPts;		// si a–ade puntos a la triangulacion
 	bool	bSoloEnContorno;	// si muestra solo los triangulos de dentro del contorno
 	ofMesh	triangContMesh;
+	ofMesh	triangContMesh_old;
 	int numPointsXtra;
 	
 	bool doTessel;
@@ -50,7 +51,9 @@ public:
 	
 	bool bFill;
 	
+	int modoFill;
 	
+	bool bDrawOld;
 	
 	// GUI
 	ofxUISuperCanvas *gui;
