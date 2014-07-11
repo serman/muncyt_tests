@@ -38,16 +38,16 @@ void testApp::setupGUI() {
     gui->addSpacer();
     gui->addLabel("_Control_", OFX_UI_FONT_MEDIUM);
     gui->addSpacer();
-	gui->addToggle("Delaunay", doTriang);
-	gui->addToggle("Fill", bFill);
+	gui->addToggle("Delaunay", &doTriang);
+	gui->addToggle("Fill", &bFill);
     gui->addIntSlider("modoFill", 0, 2, &modoFill);
-	gui->addToggle("Draw Old", bDrawOld);
-	gui->addToggle("Add Pts Xtra", bAddPts);
+	gui->addToggle("Draw Old", &bDrawOld);
+	gui->addToggle("Add Pts Xtra", &bAddPts);
     gui->addIntSlider("numPointsXtra", 0, 500, &numPointsXtra);
     gui->addSpacer();
-	gui->addToggle("Path Tessel", doTessel);
+	gui->addToggle("Path Tessel", &doTessel);
     gui->addSpacer();
-    gui->addSlider("Treshold", 0, 255, &thres);
+    gui->addSlider("Treshold", 0, 255, thres);
     gui->addSpacer();
 	
 	
@@ -336,7 +336,7 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 	string name = e.widget->getName(); 
 	int kind = e.widget->getKind(); 
 	
-	if(name == "xxTreshold")
+	if(name == "Treshold")
 	{
 		ofxUISlider *slider = (ofxUISlider *) e.widget; 
 		ofLogNotice("threshold event");		
@@ -349,12 +349,12 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofLogNotice("numPointsXtra event: " + ofToString(slider->getScaledValue()));
 		numPointsXtra = slider->getScaledValue();
 	}	
-	else if(name == "Delaunay")
+	else if(name == "xxDelaunay")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		doTriang = slider->getValue();
 	}	
-	else if(name == "Fill")
+	else if(name == "xxFill")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		bFill = slider->getValue();
@@ -364,17 +364,17 @@ void testApp::guiEvent(ofxUIEventArgs &e)
 		ofxUIIntSlider *slider = (ofxUIIntSlider *) e.widget; 
 		modoFill = slider->getScaledValue();
 	}	
-	else if(name == "Draw Old")
+	else if(name == "xxDraw Old")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		bDrawOld = slider->getValue();
 	}	
-	else if(name == "Add Pts Xtra")
+	else if(name == "xxAdd Pts Xtra")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		bAddPts = slider->getValue();
 	}	
-	else if(name == "Path Tessel")
+	else if(name == "xxPath Tessel")
 	{
 		ofxUIToggle *slider = (ofxUIToggle *) e.widget; 
 		doTessel = slider->getValue();
