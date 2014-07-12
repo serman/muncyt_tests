@@ -62,7 +62,7 @@ void draw() {
       }
     }
   }
-  filter(POSTERIZE, 15);
+  if(!keyPressed) filter(POSTERIZE, 15);
   } 
   
 }
