@@ -188,6 +188,7 @@ void facesSlitScan::leer_ImagesNames() {
 }
 
 void facesSlitScan::cargarNImages(int nn) {
+	ofLogNotice("cargarNImages");
 
 	// Seleccionar nn imagenes
 	vector<string> seleccionNames;
@@ -197,7 +198,8 @@ void facesSlitScan::cargarNImages(int nn) {
 	random_shuffle(imagesNames.begin(), imagesNames.end());
 	
 	int nTot = MIN(nn, imagesNames.size());
-	for(int i=0; i<nn; i++) {
+	ofLogNotice("cargarNImages. nTot: "+ofToString(nTot));
+	for(int i=0; i<nTot; i++) {
 		seleccionNames.push_back(imagesNames[i]);
 	}
 
