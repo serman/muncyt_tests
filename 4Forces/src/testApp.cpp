@@ -275,8 +275,10 @@ void testApp::draw4Forces() {
 }
 
 void testApp::drawBola4(ofVec2f pos, float radius) {
-	ofVec2f posCentro =  pos-ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
-	float angulo = posCentro.angle(ofVec2f(1,0));
+	ofVec2f vx = ofVec2f(1,0);
+	ofVec2f centroScreen = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
+	ofVec2f posCentro =  pos-centroScreen;
+	float angulo = vx.angle(posCentro);
 	while(angulo<0) {angulo+=360.0;}
 	
 	ofPushMatrix();
@@ -284,24 +286,21 @@ void testApp::drawBola4(ofVec2f pos, float radius) {
 	ofFill();
 	ofTranslate(pos.x,pos.y,0);
 	if(angulo>=0 && angulo<90) {
-		float rr = 3*radius;
+		float rr = 2*radius;
 		ofSetColor(ofColor::royalBlue, 200);
 		bola.draw(-rr,-rr,2*rr,2*rr);
+		ofTranslate(-posCentro.x,-posCentro.y,0);
+		ofSetColor(ofColor::royalBlue, 80);
+		ofSetLineWidth(0.2);
+		ofLine(0,0,  posCentro.length()*cos(angulo*DEG_TO_RAD), posCentro.length()*sin(angulo*DEG_TO_RAD));
+		ofPolyline arco;
+		arco.arc(ofPoint(0,0), posCentro.length(), posCentro.length(),0, 90);
+		arco.draw();
 		
-		ofPushMatrix();
-		ofTranslate(-pos.x, -pos.y, 0);
-		ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 0);
-		float rot = (90-2*angulo)/2;
-		ofRotate(rot);
-		ofTranslate(posCentro.x, posCentro.y,0);
-		ofSetColor(ofColor::blueSteel  , 200);
-		rr = 3*radius;
-		bola.draw(-rr,-rr,2*rr,2*rr);
-		ofPopMatrix();
 	}
 	
 	else if(angulo>=90 && angulo<180) {
-		float rr = 8*radius;
+		float rr = 6*radius;
 		ofSetColor(ofColor::green, 200);
 		bola.draw(-rr,-rr,2*rr,2*rr);
 	}
@@ -312,9 +311,22 @@ void testApp::drawBola4(ofVec2f pos, float radius) {
 		ofCircle(0,0,radius/8);
 	}
 	else if(angulo>=270 && angulo<360) {
-		float rr = 3*radius;
+		float rr = 2*radius;
 		ofSetColor(ofColor::red, 150);
 		bola.draw(-rr,-rr,2*rr,2*rr);
+		
+		
+		ofPushMatrix();
+		ofTranslate(-pos.x, -pos.y, 0);
+		ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 0);
+		float rot = 2*(315-angulo);
+		ofRotate(rot);
+		ofTranslate(posCentro.x, posCentro.y,0);
+		ofSetColor(ofColor::darkRed  , 150);
+		rr = 2*radius;
+		bola.draw(-rr,-rr,2*rr,2*rr);
+		ofPopMatrix();
+		
 	}
 	
 	ofPopStyle();
