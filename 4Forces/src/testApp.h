@@ -44,5 +44,9 @@ public:
 	float ladoPart1, ladoPart2;
 	
 	vector<ofColor> coloresBN;
+	
+	vector<ofPolyline>	sectores;
+	void setupSectores();
+	
 };
 

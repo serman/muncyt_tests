@@ -41,6 +41,22 @@ void testApp::setup() {
 	
 }
 
+void testApp::setupSectores() {
+	ofVec2f centroScreen = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
+	float rrr = ofGetHeight()/2.0;
+	
+	for(int i=0; i<4; i++) {
+		float ang = i*HALF_PI;
+		ofPolyline pl;
+		pl.addVertex(centroScreen.x,centroScreen.y,0);
+		pl.addVertex(rrr*cos(ang),rrr*sin(ang),0);
+		pl.arc(centroScreen, rrr, rrr, DEG_TO_RAD*ang, DEG_TO_RAD*(ang+HALF_PI), true);
+		pl.close();
+		
+	}
+	
+}
+
 void testApp::addCircle(ofPoint _pos) {
 	ofLogNotice("AddCircle");
 	float r = ofRandom(3, 6);		
@@ -56,7 +72,7 @@ void testApp::addBox(ofPoint _pos) {
 	float w = ofRandom(4, 8);	
 	float h = ofRandom(w, 12);	
 	ofPtr<ofxBox2dRect> rect = ofPtr<ofxBox2dRect>(new ofxBox2dRect);
-	rect.get()->setPhysics(3.0, 0.53, 0.9);
+	rect.get()->setPhysics(1.5, 0.53, 0.9);
 	rect.get()->setup(box2d.getWorld(), _pos.x, _pos.y, w, h);
 	boxes.push_back(rect);
 }
@@ -120,7 +136,6 @@ void testApp::update() {
 		//  - REPULSION circulo y ATRACCION box: si dist-mouse < distMinima
 		//  - ATRACCION circulo y REPULSION box: si dist-mouse > distMaxima
 		// 
-		
 		
 		// o poner los tuios impares con atraccion y los impares con repulsion
 		float fFuerza = 5.0;
@@ -242,7 +257,20 @@ void testApp::draw() {
 		//box2d.drawGround();
 		
 		ofDisableAlphaBlending();
+
 	}
+
+	ofPath borde;
+	borde.clear();
+	ofColor ctmp = ofColor::blue;
+	borde.setFillColor(ctmp);
+	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
+	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
+	// rectangulo 
+	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
+	borde.circle(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/2*0.8);	
+	borde.draw();
+	
 	
 	string info = "";
 	info += "Press [c] for circles\n";
@@ -314,7 +342,6 @@ void testApp::drawBola4(ofVec2f pos, float radius) {
 		float rr = 2*radius;
 		ofSetColor(ofColor::red, 150);
 		bola.draw(-rr,-rr,2*rr,2*rr);
-		
 		
 		ofPushMatrix();
 		ofTranslate(-pos.x, -pos.y, 0);
