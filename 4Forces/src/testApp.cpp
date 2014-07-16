@@ -39,6 +39,17 @@ void testApp::setup() {
 	
 	bDraw4Forces = true;
 	
+	borde.clear();
+	ofColor ctmp = ofColor::black;
+	borde.setFillColor(ctmp);
+	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
+	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
+	// rectangulo 
+	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
+	borde.setCircleResolution(60);
+	borde.circle(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/2*0.95);
+	
+	
 }
 
 void testApp::setupSectores() {
@@ -260,15 +271,6 @@ void testApp::draw() {
 
 	}
 
-	ofPath borde;
-	borde.clear();
-	ofColor ctmp = ofColor::blue;
-	borde.setFillColor(ctmp);
-	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
-	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
-	// rectangulo 
-	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
-	borde.circle(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/2*0.8);	
 	borde.draw();
 	
 	
@@ -289,20 +291,22 @@ void testApp::draw4Forces() {
 	for(int i=0; i<circles.size()-1; i++) {		
 		ofVec2f pos = circles[i].get()->getPosition();
 		float rr = circles[i].get()->getRadius();
-		drawBola4(pos, rr);		
+		float ang = circles[i].get()->getRotation();
+		drawBola4(pos, rr, ang*RAD_TO_DEG);		
 	}
 	
 	for(int i=0; i<boxes.size(); i++) {
 		ofVec2f pos = boxes[i].get()->getPosition();
 		float rr = boxes[i].get()->getHeight();
-		drawBola4(pos, rr);		
+		float ang = boxes[i].get()->getRotation();
+		drawBola4(pos, rr, ang*RAD_TO_DEG);		
 	}	
 	
 	
 	ofDisableAlphaBlending();
 }
 
-void testApp::drawBola4(ofVec2f pos, float radius) {
+void testApp::drawBola4(ofVec2f pos, float radius, float rot) {
 	ofVec2f vx = ofVec2f(1,0);
 	ofVec2f centroScreen = ofVec2f(ofGetWidth()/2, ofGetHeight()/2);
 	ofVec2f posCentro =  pos-centroScreen;
@@ -339,21 +343,51 @@ void testApp::drawBola4(ofVec2f pos, float radius) {
 		ofCircle(0,0,radius/8);
 	}
 	else if(angulo>=270 && angulo<360) {
-		float rr = 2*radius;
-		ofSetColor(ofColor::red, 150);
-		bola.draw(-rr,-rr,2*rr,2*rr);
-		
-		ofPushMatrix();
-		ofTranslate(-pos.x, -pos.y, 0);
-		ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 0);
-		float rot = 2*(315-angulo);
-		ofRotate(rot);
-		ofTranslate(posCentro.x, posCentro.y,0);
-		ofSetColor(ofColor::darkRed  , 150);
-		rr = 2*radius;
-		bola.draw(-rr,-rr,2*rr,2*rr);
-		ofPopMatrix();
-		
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+
+		if(false) {
+			float rr = 2*radius;
+			ofSetColor(ofColor::red, 150);
+	//		ofSetColor(ofColor::darkBlue  , 150);
+			bola.draw(-rr,-rr,2*rr,2*rr);
+			
+			ofPushMatrix();
+			ofTranslate(-pos.x, -pos.y, 0);
+			ofTranslate(ofGetWidth()/2, ofGetHeight()/2, 0);
+			float rot = 2*(315-angulo);
+			ofRotate(rot);
+			ofTranslate(posCentro.x, posCentro.y,0);
+			ofSetColor(ofColor::darkRed  , 150);
+			rr = 2*radius;
+			bola.draw(-rr,-rr,2*rr,2*rr);
+			ofPopMatrix();
+		}
+		else {
+			float rr = 0.7*radius;
+			ofRotate(rot);
+			ofSetColor(ofColor::red, 150);
+			//		ofSetColor(ofColor::darkBlue  , 150);
+			ofPushMatrix();
+			ofTranslate(radius,0,0);
+			bola.draw(-rr,-rr,2*rr,2*rr);
+			ofPopMatrix();
+			
+			ofSetColor(ofColor::blue, 150);
+			ofPushMatrix();
+			ofRotateZ(120);
+			ofTranslate(radius,0,0);
+			bola.draw(-rr,-rr,2*rr,2*rr);
+			ofPopMatrix();
+			
+			ofSetColor(ofColor::green, 150);
+			ofPushMatrix();
+			ofRotateZ(240);
+			ofTranslate(radius,0,0);
+			bola.draw(-rr,-rr,2*rr,2*rr);
+			ofPopMatrix();
+			
+		}
+		ofDisableBlendMode();
 	}
 	
 	ofPopStyle();
@@ -407,5 +441,14 @@ void testApp::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void testApp::resized(int w, int h){
+	borde.clear();
+	ofColor ctmp = ofColor::black;
+	borde.setFillColor(ctmp);
+	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
+	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
+	// rectangulo 
+	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
+	borde.setCircleResolution(60);
+	borde.circle(ofGetWidth()/2,ofGetHeight()/2,ofGetHeight()/2*0.95);	
 }
 

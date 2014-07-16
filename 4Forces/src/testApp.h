@@ -23,7 +23,7 @@ public:
 
 	void	draw4Forces();	
 	bool	bDraw4Forces;
-	void	drawBola4(ofVec2f pos, float radius);
+	void	drawBola4(ofVec2f pos, float radius, float rot=0);
 	
 	ofxBox2d                                box2d;			  //	the box2d world
 	vector		<ofPtr<ofxBox2dCircle> >	circles;		  //	default box2d circles
@@ -47,6 +47,8 @@ public:
 	
 	vector<ofPolyline>	sectores;
 	void setupSectores();
-	
+
+	ofPath borde;
+
 };
 
