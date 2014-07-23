@@ -39,6 +39,8 @@ void testApp::setup() {
 	
 	bDraw4Forces = true;
 	
+	fRed = true;
+	
 	borde.clear();
 	ofColor ctmp = ofColor::black;
 	borde.setFillColor(ctmp);
@@ -345,7 +347,7 @@ void testApp::drawBola4(ofVec2f pos, float radius, float rot) {
 	else if(angulo>=270 && angulo<360) {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 
-		if(false) {
+		if(fRed) {
 			float rr = 2*radius;
 			ofSetColor(ofColor::red, 150);
 	//		ofSetColor(ofColor::darkBlue  , 150);
@@ -411,6 +413,8 @@ void testApp::keyPressed(int key) {
 	if(key == 't') ofToggleFullscreen();
 	
 	if(key == '4') bDraw4Forces = !bDraw4Forces;
+	
+	if(key=='r') fRed=!fRed;
 	
 	isKeyPressed = true;
 }
