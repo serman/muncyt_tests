@@ -17,6 +17,9 @@ uniform sampler2DRect tex6;
 uniform sampler2DRect tex7;
 uniform sampler2DRect tex8;
 uniform sampler2DRect tex9;
+uniform sampler2DRect tex10;
+uniform sampler2DRect tex11;
+uniform sampler2DRect tex12;
 
 
 
