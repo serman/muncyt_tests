@@ -60,7 +60,6 @@ void testApp::updateParticlesX() {
 	}
 	
 	
-	
 	// update
 	for(int i=0; i<particulas.size(); i++) {
 		particulas[i].update();

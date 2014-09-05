@@ -29,8 +29,6 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
 		ofTrueTypeFont font;
-		ofShader shader;
-		bool doShader;
 	
 		ofVec2f		zentro;
 	

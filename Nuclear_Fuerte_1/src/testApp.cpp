@@ -6,14 +6,29 @@ void testApp::setup(){
 
 	ofSetVerticalSync(true);
 	
-	zentro = ofVec3f(ofGetWidth()/2.0,ofGetHeight()/2.0,0);
+	// setup geometria del sketch
+	zentro = ofVec3f(ofGetWidth()/2.0,W_HEIGHT/2.0,0);
+
+	radioEscena = W_HEIGHT/2*0.95;
+	// Borde Negro circular
+	borde.clear();
+	ofColor ctmp = ofColor::black;//red;//black;
+	borde.setFillColor(ctmp);
+	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
+	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
+	// rectangulo 
+	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
+	borde.setCircleResolution(60);
+	borde.circle(ofGetWidth()/2, W_HEIGHT/2, radioEscena);	
 	
+	//
 	swDifraccion = false;
 	
 	ratePartic = 20;
 	
+	bDrawingMode = false;
 	bDrawCaminos = true;
-	bDrawPtosChoque = true;
+	bDrawPtosChoque = false;
 	bTiltCamino = false;	
 	
 	
@@ -100,8 +115,10 @@ void testApp::update(){
 	
 	// remove particulas marcadas para borrar (por ej que esten fuera de screen)
 	for(int i=particulas.size()-1; i>0;i--) {
-		if( particulas[i].position.x>(ofGetWidth()+50) ){
-			
+		ofVec2f distZ = ofVec2f(particulas[i].position.x, particulas[i].position.y);
+		distZ -= zentro;
+		if( distZ.length() > 3*W_HEIGHT ){
+			particulas_old.push_back(particulas[i]);
 			particulas.erase(particulas.begin()+i);
 		}
 	}
@@ -143,6 +160,12 @@ void testApp::addParticleLateral() {
 //		ParticleS pTmp = ParticleS(ofVec3f(0,ofRandom(ofGetHeight())) , ofVec3f(ofRandom(10.0, 30.0), 0) , ofColor::white, 1.0, 0.0);
 		
 	}
+}
+
+void testApp::addParticleFromEmiter(Emisor em) {
+	
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -205,6 +228,9 @@ void testApp::draw(){
 	ofPopMatrix();
 	
 	
+	// Borde Escena
+	borde.draw();
+	
 	//
 	// INFO
 	// 
@@ -214,6 +240,7 @@ void testApp::draw(){
 	ofDrawBitmapString("num pts camino1: " + ofToString(camino1.getVertices().size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("num pts camino simpl: " + ofToString(camino.getVertices().size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("Num Partics: " + ofToString(particulas.size()), 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("Num Partics old: " + ofToString(particulas_old.size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("p clear partics", 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("o clear emitters", 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("FR: " + ofToString(ofGetFrameRate()), 10,hLin); hLin+=dLin;
@@ -239,6 +266,7 @@ void testApp::keyPressed(int key){
 	else if(key=='o') {
 		emitters.clear();
 	}
+	else if(key=='m') bDrawingMode=!bDrawingMode;
 	else if(key=='e') bDrawCaminos=!bDrawCaminos;
 	else if(key=='r') bDrawPtosChoque=!bDrawPtosChoque;
 	else if(key=='t') bTiltCamino=!bTiltCamino;
@@ -255,20 +283,21 @@ void testApp::mouseMoved(int x, int y){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-	if(button==0) {		
+	if(button==0 && bDrawingMode) {		
 		camino1.addVertex(x,y);
 		
 		testPath.lineTo(x-15+30*ofRandom(1.0),y);	
 	}
 	else if(button==2) {
-		// mover el œltimo emitter
-		ofVec2f posTmp(x,y);
+		// mover el œltimo emitter si esta en la zona de accion
+		ofVec2f posTmp(x,y);		
 		posTmp -= zentro;
-//		float rhoTmp = posTmp.length();
-//		float angTmp = atan2(posTmp.y, posTmp.x);
-//		emitters[emitters.size()-1].setPos_Radial(rhoTmp, angTmp);
-		emitters[emitters.size()-1].setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
-
+		if(posTmp.length()<=radioEscena) {
+	//		float rhoTmp = posTmp.length();
+	//		float angTmp = atan2(posTmp.y, posTmp.x);
+	//		emitters[emitters.size()-1].setPos_Radial(rhoTmp, angTmp);
+			emitters[emitters.size()-1].setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
+		}
 	}
 }
 
@@ -278,27 +307,33 @@ void testApp::mousePressed(int x, int y, int button){
 //	if(camino.getVertices().size()>4) camino.curveTo(x,y);
 //	else camino.addVertex(x,y);
 	
-	if(button==0) {
-		camino1.addVertex(x,y);
+	if(button==0 && bDrawingMode) {
+		ofVec2f posTmp(x,y);		
+		posTmp -= zentro;
+		if(posTmp.length()<=radioEscena) {
+			camino1.addVertex(x,y);
 		
-		testPath.newSubPath();
-		testPath.moveTo(x+30,y);
+			testPath.newSubPath();
+			testPath.moveTo(x+30,y);
+		}
 	}
 	else if(button==2) {
 		// add nuevo emitter
 		// 
-		Emisor emTmp;
-		ofVec2f posTmp(x,y);
+		ofVec2f posTmp(x,y);		
 		posTmp -= zentro;
-		float rhoTmp = posTmp.length();
-		float angTmp = atan2(posTmp.y, posTmp.x);
-//		emTmp.setPos_Radial(rhoTmp, angTmp);
-		emTmp.setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
+		if(posTmp.length()<=radioEscena) {
+			Emisor emTmp;
+			float rhoTmp = posTmp.length();
+			float angTmp = atan2(posTmp.y, posTmp.x);
+//			emTmp.setPos_Radial(rhoTmp, angTmp);
+			emTmp.setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
 		
-		ofColor cTmp = ofColor::fromHsb(angTmp*RAD_TO_DEG, 255, 255, 255);
-		emTmp.setColor(cTmp);
+			ofColor cTmp = ofColor::fromHsb(angTmp*RAD_TO_DEG, 255, 255, 255);
+			emTmp.setColor(cTmp);
 		
-		emitters.push_back(emTmp);
+			emitters.push_back(emTmp);
+		}
 	}
 }
 
@@ -347,6 +382,7 @@ void testApp::setupGUI() {
 	gui1->addSlider("Magnetic Force", -5, 5.0, &magnetField);
 	
 	gui1->addSpacer();
+	gui1->addToggle("(m) Modo Dibujo ON/OFF", &bDrawingMode );
 	gui1->addToggle("(d) Difracci—n ON/OFF", &swDifraccion );
 	gui1->addToggle("(e) Draw Camino ON/OFF", &bDrawCaminos );
 	gui1->addToggle("(r) Draw Colisiones ON/OFF", &bDrawPtosChoque );

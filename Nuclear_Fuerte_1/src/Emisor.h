@@ -10,13 +10,23 @@
 #ifndef _EMISOR
 #define _EMISOR
 
+#include "testApp.h"
 
+
+struct ParticleData {
+	float m;
+	float q;
+    ofVec3f position;
+    ofVec3f velocity;
+    ofColor color;
+	int		tpPartic;
+};
 
 class Emisor {
 
 public:
 	// posicion
-	float rho;
+	float rho;	// controlara la energia de las particulas emitidas
 	float ang;
 	ofVec2f posXY;
 	
@@ -27,6 +37,7 @@ public:
 	// Tipo Particula
 	int		tpPartic;
 	
+	ParticleData	pData;
 	
 	// para dibujar
 	float		lado;
@@ -114,6 +125,14 @@ public:
 		ofPopStyle();
 		
 	}
+	
+	
+	// Da valores de particulas que emite
+	ParticleData getParticleData() {
+		return pData;
+	}
+	
+	
 	
 };
 

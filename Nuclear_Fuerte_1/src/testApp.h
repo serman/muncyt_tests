@@ -11,7 +11,6 @@
 #define W_HEIGHT	768
 
 
-
 class testApp : public ofBaseApp{
 	public:
 		void setup();
@@ -29,13 +28,18 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 	
 	ofVec3f zentro;
+	float	radioEscena;
+	ofPath	borde;
+	
+	
 	
 	ofPolyline	camino, camino1;
 	void		tiltCamino();
 	bool		bTiltCamino;
 	
-	vector<ParticleS>	particulas;
+	vector<ParticleS>	particulas, particulas_old;
 	void				addParticleLateral();
+	void				addParticleFromEmiter(Emisor em);
 	int					ratePartic;
 	
 	ofVboMesh			particMesh;
@@ -53,6 +57,7 @@ class testApp : public ofBaseApp{
 	
 	ofPath	testPath;
 	
+	bool	bDrawingMode;
 	bool	bDrawCaminos;
 	bool	bDrawPtosChoque;
 

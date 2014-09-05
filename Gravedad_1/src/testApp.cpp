@@ -17,19 +17,6 @@ void testApp::setup(){
 	//we load a font and tell OF to make outlines so we can draw it as GL shapes rather than textures
 	font.loadFont("type/verdana.ttf", 100, true, false, true, 0.4, 72);
 	
-	// Shader Setup
-	#ifdef TARGET_OPENGLES
-		shader.load("shaders_gles/noise.vert","shaders_gles/noise.frag");
-	#else
-	if(ofGetGLProgrammableRenderer()){
-		shader.load("shaders_gl3/noise.vert", "shaders_gl3/noise.frag");
-	}else{
-		shader.load("shaders/noise.vert", "shaders/noise.frag");
-	}
-	#endif
-
-	doShader = true;	
-	
 	// Meshes
 	// superficie
 	setupMeshSuperf();
@@ -514,7 +501,6 @@ void testApp::setupGUI() {
 	gui1->addSlider("masa TUIO", 0, 20000.0, &masaTUIO);
 	gui1->addSpacer();
 	
-	gui1->addToggle( "TOGGLE_Shader", &doShader);
 	gui1->addToggle( "TOGGLE_WireFrame", &swWireFrame);
 	gui1->addToggle( "TOGGLE_Light", &swLight);
 	gui1->addToggle( "TOGGLE_OrthoCamera", &swOrtho);
