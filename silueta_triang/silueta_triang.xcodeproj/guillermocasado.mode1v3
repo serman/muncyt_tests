@@ -277,13 +277,13 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>5</integer>
+									<integer>6</integer>
 									<integer>3</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {305, 303}}</string>
+							<string>{{0, 0}, {305, 394}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -295,14 +295,14 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {322, 321}}</string>
+						<string>{{0, 0}, {322, 412}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
 							<real>305</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>2 71 1252 362 0 0 1280 778 </string>
+						<string>17 206 1241 453 0 0 1280 778 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -320,7 +320,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>testApp.cpp</string>
+								<string>testApp.h</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -328,11 +328,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>testApp.cpp</string>
+										<string>testApp.h</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>7FA83FB51975F537006921AB</string>
+										<string>7FD293AA19AFF64700377BE8</string>
 										<key>history</key>
 										<array>
 											<string>7F50D485195C93E2008BEADF</string>
@@ -350,8 +350,8 @@
 											<string>7F20B64B195CE63F002DB595</string>
 											<string>7F524A2C196F59030096BA0B</string>
 											<string>7F524A2D196F59030096BA0B</string>
-											<string>7FA83FB31975F537006921AB</string>
-											<string>7FA83FB41975F537006921AB</string>
+											<string>7FE5800F19AE4EF4005582E2</string>
+											<string>7FE5801119AE4EF4005582E2</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -363,14 +363,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {925, 316}}</string>
+								<string>{{0, 0}, {914, 407}}</string>
 								<key>RubberWindowFrame</key>
-								<string>2 71 1252 362 0 0 1280 778 </string>
+								<string>17 206 1241 453 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>316pt</string>
+							<string>407pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -383,9 +383,9 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 321}, {925, 0}}</string>
+								<string>{{0, 412}, {914, 0}}</string>
 								<key>RubberWindowFrame</key>
-								<string>2 71 1252 362 0 0 1280 778 </string>
+								<string>17 206 1241 453 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -394,7 +394,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>925pt</string>
+					<string>914pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -409,9 +409,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>7FA83FB61975F537006921AB</string>
+				<string>7FD2920A19AF095700377BE8</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>7FA83FB71975F537006921AB</string>
+				<string>7FD2920B19AF095700377BE8</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -550,10 +550,9 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>7FBE4FDB19086BFF00CDEAB8</string>
-		<string>/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/silueta_triang.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>2 71 1252 362 0 0 1280 778 </string>
+	<string>17 206 1241 453 0 0 1280 778 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
@@ -630,7 +629,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>7FBE4FDB19086BFF00CDEAB8</string>
-				<string>7FA83FB81975F537006921AB</string>
+				<string>7FD2920C19AF095700377BE8</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>

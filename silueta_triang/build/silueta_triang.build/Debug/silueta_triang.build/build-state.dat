@@ -4939,9 +4939,9 @@ s10766
 i"testApp.h"
 
 N/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/src/testApp.h
-c0000000053C0142A000000000000047D
-t1405097002
-s1149
+c0000000053FE0C300000000000000481
+t1409158192
+s1153
 i"ofMain.h"
 i"ofxCv.h"
 i"ofxDelaunay.h"
@@ -5889,8 +5889,8 @@ i"ofxiOSVideoPlayer.h"
 i"ofxAndroidVideoPlayer.h"
 
 N/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/libs/openFrameworksCompiled/lib/osx/openFrameworksDebug.a
-c0000000053C5937B00000000021AF050
-t1405457275
+c0000000053FE208C00000000021AF050
+t1409163404
 s35319888
 
 N/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/libs/poco/include/Poco/AbstractDelegate.h
@@ -6935,6 +6935,10 @@ i<emmintrin.h>
 N/var/folders/k2/k2dHZ1KYGy8RSw08mPIG6U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Carbon-dgdvxsexfdxbtualwznqexpilejk/Carbon.h.gch
 t1405009615
 s53737264
+
+N/var/folders/k2/k2dHZ1KYGy8RSw08mPIG6U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Carbon-dzikgbscirqglkgxclvhfizfwsap/Carbon.h.gch
+t2
+s0
 
 NopenFrameworks-Info.plist
 c00000000533B68440000000000000277
@@ -8341,6 +8345,9 @@ xc++
 xcom.apple.compilers.gcc.4_2
 oi686-apple-darwin10-gcc-4.2.1: -lpthread: linker input file unused because linking not done
 lSLF07#2@71"Precompile /System/Library/Frameworks/Carbon.framework/Headers/Carbon.h426702406#426702415#0(92"i686-apple-darwin10-gcc-4.2.1: -lpthread: linker input file unused because linking not done0(0#0#60"/System/Library/Frameworks/Carbon.framework/Headers/Carbon.h8629359264#3710"    cd /Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang    setenv LANG en_US.US-ASCII    /Developer/usr/bin/gcc-4.2 -x c++-header -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -mfix-and-continue -ftree-vectorize -msse3 -mssse3 -Wno-invalid-offsetof -gdwarf-2 -I/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/build/silueta_triang.build/Debug/silueta_triang.build/silueta_triangDebug.hmap -F/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/bin -F/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/../../../libs/glut/lib/osx -I/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/bin/include -I../../../libs/openFrameworks -I../../../libs/openFrameworks/3d -I../../../libs/openFrameworks/app -I../../../libs/openFrameworks/communication -I../../../libs/openFrameworks/events -I../../../libs/openFrameworks/gl -I../../../libs/openFrameworks/graphics -I../../../libs/openFrameworks/math -I../../../libs/openFrameworks/sound -I../../../libs/openFrameworks/types -I../../../libs/openFrameworks/utils -I../../../libs/openFrameworks/video -I../../../libs/poco/include -I../../../libs/freetype/include -I../../../libs/freetype/include/freetype2 -I../../../libs/fmodex/include -I../../../libs/glew/include -I../../../libs/FreeImage/include -I../../../libs/tess2/include -I../../../libs/cairo/include/cairo -I../../../libs/rtAudio/include -I../../../libs/glfw/include -I../../../addons/ofxCv/libs -I../../../addons/ofxCv/libs/CLD -I../../../addons/ofxCv/libs/CLD/include -I../../../addons/ofxCv/libs/CLD/include/CLD -I../../../addons/ofxCv/libs/CLD/src -I../../../addons/ofxCv/libs/ofxCv -I../../../addons/ofxCv/libs/ofxCv/include -I../../../addons/ofxCv/libs/ofxCv/include/ofxCv -I../../../addons/ofxCv/libs/ofxCv/src -I../../../addons/ofxCv/src -I../../../addons/ofxOpenCv/libs -I../../../addons/ofxOpenCv/libs/opencv -I../../../addons/ofxOpenCv/libs/opencv/include -I../../../addons/ofxOpenCv/libs/opencv/include/opencv -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2 -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/calib3d -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/core -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/features2d -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/highgui -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/imgproc -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/legacy -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ml -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/objdetect -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ts -I../../../addons/ofxOpenCv/libs/opencv/include/opencv2/video -I../../../addons/ofxOpenCv/libs/opencv/lib -I../../../addons/ofxOpenCv/libs/opencv/lib/osx -I../../../addons/ofxOpenCv/src -I/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/build/silueta_triang.build/Debug/silueta_triang.build/DerivedSources/i386 -I/Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/build/silueta_triang.build/Debug/silueta_triang.build/DerivedSources -D__MACOSX_CORE__ -lpthread -mtune=native -c /System/Library/Frameworks/Carbon.framework/Headers/Carbon.h -o /var/folders/k2/k2dHZ1KYGy8RSw08mPIG6U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Carbon-dgdvxsexfdxbtualwznqexpilejk/Carbon.h.gch0#
+
+CProcessPCH++ /var/folders/k2/k2dHZ1KYGy8RSw08mPIG6U+++TI/-Caches-/com.apple.Xcode.501/SharedPrecompiledHeaders/Carbon-dzikgbscirqglkgxclvhfizfwsap/Carbon.h.gch /System/Library/Frameworks/Carbon.framework/Headers/Carbon.h normal i386 c++ com.apple.compilers.gcc.4_2
+r0
 
 CTouch /Users/guillermocasado/Documents/OF2013/OF_v0.8.0_osx/apps/muncyt_tests/silueta_triang/bin//silueta_triangDebug.app
 s426813677.450632
