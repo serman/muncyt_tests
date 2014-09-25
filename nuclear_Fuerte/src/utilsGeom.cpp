@@ -45,22 +45,19 @@ namespace GeometryUtils {
 	
 	static ofVec2f getIntersectionPoly(const ofVec2f &pt1, const ofVec2f &pt2, const ofPolyline &poly) {
 		ofVec3f inters= ofVec2f(0,0);
-		bool sit1 = estaDentro(pt1, poly);
-		bool sit2 = estaDentro(pt2, poly);
-		if((sit1 && !sit2) || (!sit1 && sit2)) {
-			ofVec2f pl1,pl2;
-			int N = poly.size();
-			int i=0;
-			for(i=0; i<N-1; i++) {
-				pl1 = poly[i];
-				pl2 = poly[i+1];
-				inters = GeometryUtils::getLineIntersection(pt1, pt2, pl1, pl2, false);
-				if(inters!=ofVec2f(0,0)) {
-					break;
-				}	
-			}
+		ofVec2f pl1,pl2;
+		int N = poly.size();
+		int i=0;
+		for(i=0; i<N-1; i++) {
+			pl1 = poly[i];
+			pl2 = poly[i+1];
+			inters = GeometryUtils::getLineIntersection(pt1, pt2, pl1, pl2, false);
+			if(inters!=ofVec2f(0,0)) {
+				break;
+			}	
 		}
-		else inters = ofVec2f(0,0);
+		
+		// ademas se puede calcular el angulo de incidencia y devolverlo en un struct con el pto de interseccion
 
 		return inters;
 	}

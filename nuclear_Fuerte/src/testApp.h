@@ -22,10 +22,13 @@ class testApp : public ofBaseApp{
 	
 	ofVec3f zentro;
 	
-	ofPolyline camino, camino1;
+	ofPolyline	camino, camino1;
+	void		tiltCamino();
+	bool		bTiltCamino;
 	
 	vector<ParticleX>	particulas;
 	void				addParticleLateral();
+	int					ratePartic;
 	
 	ofVboMesh			particMesh;
 	
@@ -35,11 +38,11 @@ class testApp : public ofBaseApp{
 	
 	Emisor	emitter;
 	
-	
-	
 	ofPath	testPath;
 	
-	
+	bool	bDrawCaminos;
+	bool	bDrawPtosChoque;
+
 	void	setupGUI();
 	
 };

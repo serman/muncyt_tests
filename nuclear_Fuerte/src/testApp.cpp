@@ -10,8 +10,11 @@ void testApp::setup(){
 	
 	swDifraccion = false;
 	
+	ratePartic = 20;
 	
-	
+	bDrawCaminos = true;
+	bDrawPtosChoque = true;
+	bTiltCamino = false;	
 	
 	
 	testPath.setFilled(false);
@@ -27,6 +30,9 @@ void testApp::setup(){
 void testApp::update(){
 	// add alguna particula desde un lateral
 	addParticleLateral();
+	
+	// cambiar camino
+	if(bTiltCamino) tiltCamino();
 	
 	// update partics
 	
@@ -45,25 +51,42 @@ void testApp::update(){
 //		if(rnd<0.02) particulas[i].forceRadAround(zentro, 3.0, 300.0);
 		
 		
-		// check si partic esta dentro o fuera de shillouette
-		if(camino1.size()>0) {
-			if(GeometryUtils::estaDentro(particulas[i].position, camino1)) {
+		if(camino.size()>0) {
+			bool bCruce = false;
+			if(GeometryUtils::estaDentro(particulas[i].position, camino)) {
 				particulas[i].color = ofColor::red;
-				particulas[i].setInside(true);	
+				bCruce = particulas[i].setInside(true);	
 			}
 			else {
 				particulas[i].color = particulas[i].color_orig; 
-				particulas[i].setInside(false);	
+				bCruce = particulas[i].setInside(false);	
 			}
-		}
+			
+			if(bCruce) {
+				// check si partic choca con shillouette
 
-		// check si partic choca con shillouette
-		if(camino1.size()>0) {
-			ofVec2f ptChoque = GeometryUtils::getIntersectionPoly(particulas[i].position_prev, particulas[i].position, camino1);
-			if(ptChoque!=ofVec2f(0,0)) {
-				ptsChoque.push_back(ptChoque);
+				ofVec2f ptChoque = GeometryUtils::getIntersectionPoly(particulas[i].position_prev, particulas[i].position, camino);
+				if(ptChoque!=ofVec2f(0,0)) {
+					ptsChoque.push_back(ptChoque);
+					
+					// add el punto al camino de la particula
+					particulas[i].insertPtChoque(ptChoque);
+					
+					// recalcular la direccion de la particula.
+//					ofVec2f dirI = particulas[i].position - ptChoque;
+//					ofVec2f dirI = particulas[i].velocity;
+					// rotate random
+					float angRotMax = 15;
+					float angRot =  ofRandom(-angRotMax, angRotMax);
+					ofColor cc = ofColor::fromHsb(ofMap(abs(angRot), 0, angRotMax, 0,255), 255, 255, 100);
+					particulas[i].colorExcited = cc;
+					particulas[i].velocity.rotate(angRot, ofVec3f(0,0,1));
+					
+				}
 			}
 		}
+		
+		
 	}
 	
 	
@@ -77,13 +100,26 @@ void testApp::update(){
 
 }
 
+void testApp::tiltCamino() {
+	ofPolyline pl = camino;
+	camino.clear();
+	
+	float maxDespl = 2.0;
+	for(int i=0; i<pl.size(); i++) {
+		camino.addVertex( pl[i]+ofVec2f(ofRandom(-maxDespl, maxDespl), ofRandom(-maxDespl, maxDespl)) );
+	}
+	camino.close();
+	
+	
+}
+
 
 void testApp::addParticleLateral() {
 	
 	
 	//	float rnd = ofRandom(1.0);
 	//	if(rnd<0.15) {
-	if(ofGetFrameNum()%20==0) {
+	if(ofGetFrameNum()%ratePartic==0) {
 		//		ParticleX( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
 		//		ParticleX( ofVec3f _position , ofVec3f _vel , ofColor _color, float mass = 1.0, float charge = 0.0 )
 		float v = ofMap(mouseX,0,ofGetHeight(), 4, 10);
@@ -102,33 +138,47 @@ void testApp::addParticleLateral() {
 //--------------------------------------------------------------
 void testApp::draw(){
 
-	ofBackground(ofColor::darkBlue);
+	ofBackground(ofColor::black);
 	
+	//
+	//
+	// PARTICULAS 
+	//
 	
-	ofPushStyle();
 	ofEnableSmoothing();
 	ofEnableAntiAliasing();
-	ofSetColor(ofColor::white, 200);
-	camino.draw();
-	ofSetColor(ofColor::lime, 60);
-	ofSetLineWidth(15);
-	camino1.draw();
-	ofPopStyle();
-	
-	testPath.draw();
 
+	if(bDrawCaminos) {
+		ofPushStyle();
+		ofSetColor(ofColor::lime, 60);
+		ofSetLineWidth(15);
+		camino.draw();
+		ofSetColor(ofColor::white, 200);
+		ofSetLineWidth(1);
+		camino1.draw();
+		ofPopStyle();
+		
+		testPath.draw();
+	}
+	
 	for(int i=0;i<particulas.size();i++) {
 		particulas[i].draw();
 //		particulas[i].drawMemoPath();
 	}
 	
 	
-	ofPushStyle();
-	for(int i=0;i<ptsChoque.size();i++) {
-		ofCircle(ptsChoque[i].x, ptsChoque[i].y, 3);
-//		ofDrawBitmapString(ofToString(ptsChoque[i].x)+","+ofToString(ptsChoque[i].y), ptsChoque[i]);
+	if(bDrawPtosChoque) {
+		ofPushStyle();
+		for(int i=0;i<ptsChoque.size();i++) {
+			ofCircle(ptsChoque[i].x, ptsChoque[i].y, 3);
+	//		ofDrawBitmapString(ofToString(ptsChoque[i].x)+","+ofToString(ptsChoque[i].y), ptsChoque[i]);
+		}
+		ofPopStyle();
 	}
-	ofPopStyle();
+	
+	
+	
+	
 	
 	// 
 	// NUCLEAR FUERTE
@@ -145,12 +195,23 @@ void testApp::draw(){
 	ofPopMatrix();
 	
 	
+	//
+	// INFO
+	// 
 	ofPushStyle();
 	int hLin = 15; int dLin = 15;
 	ofDrawBitmapString("'c' clear camino", 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("num pts camino1: " + ofToString(camino1.getVertices().size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("num pts camino simpl: " + ofToString(camino.getVertices().size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("Num Partics: " + ofToString(particulas.size()), 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("p clear partics", 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("q/a rate creacion partic: " + ofToString(ratePartic), 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("(d) difraccion: " + ofToString(swDifraccion), 10,hLin); hLin+=dLin;
+
+	ofDrawBitmapString("(e) drawCamino: " + ofToString(bDrawCaminos), 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("(r) drawChoques: " + ofToString(bDrawPtosChoque), 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("(t) tiltCamino: " + ofToString(bTiltCamino), 10,hLin); hLin+=dLin;
+	
 	ofDrawBitmapString("FR: " + ofToString(ofGetFrameRate()), 10,hLin); hLin+=dLin;
 	ofPopStyle();
 }
@@ -165,6 +226,15 @@ void testApp::keyPressed(int key){
 		
 		testPath.clear();
 	}
+	else if(key=='d') swDifraccion=!swDifraccion;
+	else if(key=='q') ratePartic++;
+	else if(key=='a') ratePartic = (ratePartic>2)? ratePartic-1 : 1;
+	else if(key=='p') {
+		particulas.clear();
+	}
+	else if(key=='e') bDrawCaminos=!bDrawCaminos;
+	else if(key=='r') bDrawPtosChoque=!bDrawPtosChoque;
+	else if(key=='t') bTiltCamino=!bTiltCamino;
 }
 
 //--------------------------------------------------------------
@@ -181,7 +251,7 @@ void testApp::mouseDragged(int x, int y, int button){
 	camino1.addVertex(x,y);
 
 	
-	testPath.lineTo(x+30*ofRandom(1.0),y);	
+	testPath.lineTo(x-15+30*ofRandom(1.0),y);	
 }
 
 //--------------------------------------------------------------

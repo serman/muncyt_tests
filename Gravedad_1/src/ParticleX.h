@@ -53,36 +53,36 @@ class ParticleX
 	bool	bDrawMemoPath;
 	
     ParticleX() ;
-    
-    ParticleX( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
-    {
-        position = _position ;
-        color = _color ;
-		color_orig = color;
-		colorExcited = color;
-		m = mass;
-		q = charge;
-		
-		
-		position_prev = position;
-		
-		positions.push_back(position);
-		
-		angle = 0;
-		
-        velocity = ofVec3f ( ofRandom ( -2 , 2 ) , ofRandom ( -2 , 2 ) , ofRandom ( -2 , -2 ) ) ;
-        spawnPoint = _position ;
-        recentlyUsed=0;
-		
-		setupPaths();
-		
-    };
+//    
+//    ParticleX( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
+//    {
+//        position = _position ;
+//        color = _color ;
+//		color_orig = color;
+//		colorExcited = color;
+//		m = mass;
+//		q = charge;
+//		
+//		position_prev = position;
+//		
+//		positions.push_back(position);
+//		
+//		angle = 0;
+//		
+//        velocity = ofVec3f ( ofRandom ( -2 , 2 ) , ofRandom ( -2 , 2 ) , ofRandom ( -2 , -2 ) ) ;
+//        spawnPoint = _position ;
+//        recentlyUsed=0;
+//		
+//		setupPaths();
+//		
+//    };
 	
     ParticleX( ofVec3f _position , ofVec3f _vel , ofColor _color, float mass = 1.0, float charge = 0.0 )
     {
         position = _position ;
         color = _color ;
 		color_orig = color;
+		colorExcited = color;
 		m = mass;
 		q = charge;
 		
@@ -106,9 +106,6 @@ class ParticleX
 		bDrawMemoPath = true;
 		
 		
-//		lifeMemoPath.setStrokeColor(ofColor::blueSteel);
-//		lifeMemoPath.setColor(ofColor::blueSteel);
-//		lifeMemoPath.moveTo(position.x, position.y);
 	}
 
     void update(){
@@ -118,8 +115,8 @@ class ParticleX
 		
 		// muy graciosete:
 		//	https://sites.google.com/site/ofauckland/examples/curly-moving-particles		
-		//		angle += ofSignedNoise(position.x, position.y)*PI;
-		//		velocity.rotate(angle, ofVec3f(0,0,1));		
+//		angle += ofSignedNoise(position.x, position.y)*PI;
+//		velocity.rotate(angle, ofVec3f(0,0,1));		
 		
         position += velocity;
 		
@@ -132,9 +129,9 @@ class ParticleX
 		lifePath.addVertex(position);
 		
 		// puntos dentro de un polyline
-		if(inside) {
-			memoPaths[memoPaths.size()-1].addVertex(position);
-		}
+//		if(inside) {
+//			memoPaths[memoPaths.size()-1].addVertex(position);
+//		}
 		
         acceleration=acceleration*0;
     }	
@@ -164,10 +161,11 @@ class ParticleX
 		}
 
 		ofEllipse(position.x, position.y, 3,3);
+		
 		if(inside) {
 			ofPushStyle();
 			ofNoFill();
-			ofEllipse(position.x, position.y, 9,9);			
+			ofEllipse(position.x, position.y, 5,5);			
 			ofPopStyle();
 		}
 
@@ -224,13 +222,13 @@ class ParticleX
 	}
 	
     void applyForce(float a_x, float a_y, float a_z) {
-        acceleration.x += a_x;
-        acceleration.y += a_y;
-        acceleration.z += a_z;
+        acceleration.x += a_x/m;
+        acceleration.y += a_y/m;
+        acceleration.z += a_z/m;
     };
     
     void applyForce(ofVec3f a_loc) {
-        acceleration += a_loc;
+        acceleration += a_loc/m;
     }
     
     void stopAcc() {
@@ -263,21 +261,18 @@ class ParticleX
         acceleration += steer;
     }
     
-    void gravityTowards(ofVec3f& a_target,float a_minDist, float speed){
-            ofVec3f diff =  a_target - position;
-            int sqdistance =  diff.length();
-            if(sqdistance>a_minDist){
-              diff.normalize();
-            int force=sqdistance/speed;
-            diff *= force;
-            applyForce( diff );
-         }//espejo
+    void gravityTowards(ofVec3f& a_target, float a_minDist, float masaAttrac){
+		ofVec3f diff =  a_target - position;
+		float sqdistance =  diff.lengthSquared();
+		if(sqdistance>(a_minDist*a_minDist)){
+			diff.normalize();
+			diff *= masaAttrac*m/sqdistance;
+//			float force=sqdistance/speed;
+//			diff *= force;
+			applyForce( diff );
+		}
         else{
-         diff.normalize();
-         int force=sqdistance/speed;
-         diff = diff*-1;
-         diff= diff*force;
-         applyForce(diff);
+			// que no haga nada
         }
     }
     

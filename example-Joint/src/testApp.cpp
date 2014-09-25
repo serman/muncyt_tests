@@ -90,11 +90,11 @@ void testApp::draw() {
 		aros[i].draw();
 	}
 	
-	string info = "";
-	info += "click and pull the chain around\n";
-	info += "FPS: "+ofToString(ofGetFrameRate(), 1)+"\n";
-	ofSetHexColor(0x444342);
-	ofDrawBitmapString(info, 30, 30);
+//	string info = "";
+//	info += "click and pull the chain around\n";
+//	info += "FPS: "+ofToString(ofGetFrameRate(), 1)+"\n";
+//	ofSetHexColor(0x444342);
+//	ofDrawBitmapString(info, 30, 30);
 }
 
 //--------------------------------------------------------------

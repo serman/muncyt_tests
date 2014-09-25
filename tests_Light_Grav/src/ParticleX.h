@@ -63,7 +63,6 @@ class ParticleX
 		m = mass;
 		q = charge;
 		
-		
 		position_prev = position;
 		
 		positions.push_back(position);
@@ -106,9 +105,6 @@ class ParticleX
 		bDrawMemoPath = true;
 		
 		
-//		lifeMemoPath.setStrokeColor(ofColor::blueSteel);
-//		lifeMemoPath.setColor(ofColor::blueSteel);
-//		lifeMemoPath.moveTo(position.x, position.y);
 	}
 
     void update(){
@@ -118,8 +114,8 @@ class ParticleX
 		
 		// muy graciosete:
 		//	https://sites.google.com/site/ofauckland/examples/curly-moving-particles		
-		//		angle += ofSignedNoise(position.x, position.y)*PI;
-		//		velocity.rotate(angle, ofVec3f(0,0,1));		
+//		angle += ofSignedNoise(position.x, position.y)*PI;
+//		velocity.rotate(angle, ofVec3f(0,0,1));		
 		
         position += velocity;
 		
@@ -224,13 +220,13 @@ class ParticleX
 	}
 	
     void applyForce(float a_x, float a_y, float a_z) {
-        acceleration.x += a_x;
-        acceleration.y += a_y;
-        acceleration.z += a_z;
+        acceleration.x += a_x/m;
+        acceleration.y += a_y/m;
+        acceleration.z += a_z/m;
     };
     
     void applyForce(ofVec3f a_loc) {
-        acceleration += a_loc;
+        acceleration += a_loc/m;
     }
     
     void stopAcc() {
