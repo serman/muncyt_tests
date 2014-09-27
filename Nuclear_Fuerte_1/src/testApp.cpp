@@ -6,6 +6,9 @@ void testApp::setup(){
 
 	ofSetVerticalSync(true);
 	
+	// Lista de colores
+	setupColores();
+	
 	// setup geometria del sketch
 	zentro = ofVec3f(ofGetWidth()/2.0,W_HEIGHT/2.0,0);
 
@@ -21,7 +24,19 @@ void testApp::setup(){
 	borde.setCircleResolution(60);
 	borde.circle(ofGetWidth()/2, W_HEIGHT/2, radioEscena);	
 	
+	// borde exterior
+	circExt.clear();
+	circExt.arc(zentro, radioEscena, radioEscena, 0, 360);
+	
+	
+	// zona central
+	centroLab.set(zentro, 50);
+	
+	emitter.bActivo = false;
+	
+	
 	//
+	swMagnetField = false;
 	swDifraccion = false;
 	
 	ratePartic = 20;
@@ -46,10 +61,16 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
 	// add alguna particula desde un lateral
-	addParticleLateral();
+//	addParticleLateral();
 	
-	// cambiar camino
-	if(bTiltCamino) tiltCamino();
+	addParticleFromEmiter(emitter);
+	for(int i=0; i<emitters.size(); i++) {
+		addParticleFromEmiter(emitters[i]);
+	}
+	
+	// reset contador
+	centroLab.contadorPartics = 0;
+	
 	
 	// update partics
 	
@@ -70,8 +91,7 @@ void testApp::update(){
 		
 //		float rnd = ofRandom(1.0);
 //		if(rnd<0.02) particulas[i].forceRadAround(zentro, 3.0, 300.0);
-		
-		
+		camino = centroLab.circulo;
 		
 		// COLISION CON CAMINO
 		if(camino.size()>0) {
@@ -79,13 +99,15 @@ void testApp::update(){
 			if(GeometryUtils::estaDentro(particulas[i].position, camino)) {
 				particulas[i].color = ofColor::red;
 				bCruce = particulas[i].setInside(true);	
+				
+				centroLab.contadorPartics++;
 			}
 			else {
 				particulas[i].color = particulas[i].color_orig; 
 				bCruce = particulas[i].setInside(false);	
 			}
 			
-			if(bCruce) {
+			if(bCruce && swDifraccion) {
 				// check si partic choca con shillouette
 
 				ofVec2f ptChoque = GeometryUtils::getIntersectionPoly(particulas[i].position_prev, particulas[i].position, camino);
@@ -114,10 +136,10 @@ void testApp::update(){
 	
 	
 	// remove particulas marcadas para borrar (por ej que esten fuera de screen)
-	for(int i=particulas.size()-1; i>0;i--) {
+	for(int i=particulas.size()-1; i>=0;i--) {
 		ofVec2f distZ = ofVec2f(particulas[i].position.x, particulas[i].position.y);
 		distZ -= zentro;
-		if( distZ.length() > 3*W_HEIGHT ){
+		if( distZ.length() > W_HEIGHT ){
 			particulas_old.push_back(particulas[i]);
 			particulas.erase(particulas.begin()+i);
 		}
@@ -152,7 +174,11 @@ void testApp::addParticleLateral() {
 		float v = ofMap(mouseX,0,ofGetHeight(), 4, 10);
 		float mass = 1+ofRandom(5);
 		float carga = floor(ofRandom(10))-5;	// de -5 a 5
-		ParticleS p = ParticleS(ofVec3f(0,ofRandom(ofGetHeight()),0), ofVec3f(v,0,0), ofColor(255,255,255), mass, carga );
+		
+		int nColor = floor(ofRandom(6)); // 0,1,2 colores y 3,4,5 anticolores
+		ofColor cTmp = coloresAll[nColor];
+
+		ParticleS p = ParticleS(ofVec3f(0,ofRandom(ofGetHeight()),0), ofVec3f(v,0,0), cTmp, mass, carga );
 		particulas.push_back(p);
 		
 		
@@ -162,9 +188,17 @@ void testApp::addParticleLateral() {
 	}
 }
 
-void testApp::addParticleFromEmiter(Emisor em) {
+void testApp::addParticleFromEmiter(Emisor &em) {
 	
-	
+	if(em.bActivo) {
+		if(ofGetFrameNum()%em.ratePartic==0) {
+			ParticleData pd = em.getParticleData();
+			pd.position += zentro;
+			pd.color = coloresAll[pd.nColor];
+			ParticleS p = ParticleS(pd);
+			particulas.push_back(p);
+		}
+	}
 	
 }
 
@@ -214,10 +248,11 @@ void testApp::draw(){
 	// NUCLEAR FUERTE
 	// 
 	// Escena centrada y simetr’a circular
+	centroLab.draw();
 	ofPushMatrix();
 		ofTranslate(zentro.x, zentro.y, zentro.z);
 		// Decorados
-	
+		
 	
 		// Emisores
 		emitter.draw();
@@ -231,6 +266,14 @@ void testApp::draw(){
 	// Borde Escena
 	borde.draw();
 	
+	// decoraci—n borde Exerior
+	ofPushStyle();
+	ofSetLineWidth(4);
+	ofSetColor(255);
+	ofNoFill();
+	circExt.draw();
+	ofPopStyle();
+	
 	//
 	// INFO
 	// 
@@ -243,6 +286,7 @@ void testApp::draw(){
 	ofDrawBitmapString("Num Partics old: " + ofToString(particulas_old.size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("p clear partics", 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("o clear emitters", 10,hLin); hLin+=dLin;
+	ofDrawBitmapString("Partics dentro: " + ofToString(centroLab.contadorPartics), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("FR: " + ofToString(ofGetFrameRate()), 10,hLin); hLin+=dLin;
 	ofPopStyle();
 }
@@ -258,6 +302,7 @@ void testApp::keyPressed(int key){
 		testPath.clear();
 	}
 	else if(key=='d') swDifraccion=!swDifraccion;
+	else if(key=='b') swMagnetField=!swMagnetField;
 	else if(key=='q') ratePartic++;
 	else if(key=='a') ratePartic = (ratePartic>2)? ratePartic-1 : 1;
 	else if(key=='p') {
@@ -283,10 +328,11 @@ void testApp::mouseMoved(int x, int y){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-	if(button==0 && bDrawingMode) {		
-		camino1.addVertex(x,y);
-		
-		testPath.lineTo(x-15+30*ofRandom(1.0),y);	
+	if(button==0) {
+		if(bDrawingMode) {		
+			camino1.addVertex(x,y);
+			testPath.lineTo(x-15+30*ofRandom(1.0),y);	
+		}
 	}
 	else if(button==2) {
 		// mover el œltimo emitter si esta en la zona de accion
@@ -307,15 +353,18 @@ void testApp::mousePressed(int x, int y, int button){
 //	if(camino.getVertices().size()>4) camino.curveTo(x,y);
 //	else camino.addVertex(x,y);
 	
-	if(button==0 && bDrawingMode) {
-		ofVec2f posTmp(x,y);		
-		posTmp -= zentro;
-		if(posTmp.length()<=radioEscena) {
-			camino1.addVertex(x,y);
-		
-			testPath.newSubPath();
-			testPath.moveTo(x+30,y);
+	if(button==0) {
+		if(bDrawingMode) {		
+			ofVec2f posTmp(x,y);		
+			posTmp -= zentro;
+			if(posTmp.length()<=radioEscena) {
+				camino1.addVertex(x,y);
+			
+				testPath.newSubPath();
+				testPath.moveTo(x+30,y);
+			}
 		}
+		else emitter.bActivo = true;
 	}
 	else if(button==2) {
 		// add nuevo emitter
@@ -329,7 +378,8 @@ void testApp::mousePressed(int x, int y, int button){
 //			emTmp.setPos_Radial(rhoTmp, angTmp);
 			emTmp.setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
 		
-			ofColor cTmp = ofColor::fromHsb(angTmp*RAD_TO_DEG, 255, 255, 255);
+			ofLogNotice(ofToString(angTmp));
+			ofColor cTmp = ofColor::fromHsb(ofMap(angTmp,-PI,PI, 0, 255), 255, 255, 255);
 			emTmp.setColor(cTmp);
 		
 			emitters.push_back(emTmp);
@@ -347,9 +397,10 @@ void testApp::mouseReleased(int x, int y, int button){
 		camino.setClosed(true);
 		camino1.setClosed(true);
 
-		
 		testPath.close();
 	}
+	
+	emitter.bActivo = false;
 }
 
 //--------------------------------------------------------------
@@ -378,7 +429,7 @@ void testApp::setupGUI() {
     
 	//    gui1->addSpacer();
 	gui1->addLabel("Magnetic Field");
-	gui1->addToggle("Magnetic Field ON/OFF", &swMagnetField );
+	gui1->addToggle("(b) Magnetic Field ON/OFF", &swMagnetField );
 	gui1->addSlider("Magnetic Force", -5, 5.0, &magnetField);
 	
 	gui1->addSpacer();
@@ -442,4 +493,17 @@ void testApp::exit()
 	// - emitters
 	// - particles
 	
+}
+
+void testApp::setupColores() {
+	colores[0] = ofColor::red; 
+	colores[1] = ofColor::green;
+	colores[2] = ofColor::blue;
+	antiColores[0] = colores[0]; antiColores[0].invert();
+	antiColores[1] = colores[1]; antiColores[1].invert();
+	antiColores[2] = colores[2]; antiColores[2].invert();
+	for(int i=0; i<3; i++) {
+		coloresAll[i] = colores[i];
+		coloresAll[i+3] = antiColores[i];
+	}
 }

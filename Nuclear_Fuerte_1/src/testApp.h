@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ParticleS.h"
 #include "Emisor.h"
+#include "Centro.h"
 
 #include "ofxXmlSettings.h"
 #include "ofxUI.h"
@@ -27,10 +28,16 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
-	ofVec3f zentro;
-	float	radioEscena;
-	ofPath	borde;
+	ofVec3f		zentro;
+	float		radioEscena;
+	ofPath		borde;
+	ofPolyline	circExt;
 	
+	// colores
+	void setupColores();
+	ofColor				coloresAll[6];
+	ofColor				colores[3];
+	ofColor				antiColores[3];	
 	
 	
 	ofPolyline	camino, camino1;
@@ -39,7 +46,7 @@ class testApp : public ofBaseApp{
 	
 	vector<ParticleS>	particulas, particulas_old;
 	void				addParticleLateral();
-	void				addParticleFromEmiter(Emisor em);
+	void				addParticleFromEmiter(Emisor &em);
 	int					ratePartic;
 	
 	ofVboMesh			particMesh;
@@ -50,6 +57,8 @@ class testApp : public ofBaseApp{
 	
 	Emisor	emitter;
 	vector <Emisor>		emitters;
+	
+	Centro		centroLab;
 	
 	float	magnetField;
 	bool	swMagnetField;

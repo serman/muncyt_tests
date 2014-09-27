@@ -22,7 +22,7 @@
 
 #include "ofMain.h"
 
-
+#include "Emisor.h"
 
 
 class ParticleS
@@ -36,7 +36,7 @@ class ParticleS
 	vector<ofVec3f> positions;
     ofVec3f acceleration ;          //smoothing applied to velocity
     ofVec3f spawnPoint ;            //original location to line up the picture
-    ofColor color, color_orig, colorExcited ;
+    ofColor color, color_orig, colorExcited, colorTail ;
     char recentlyUsed;
 	
 	int	tipoPart;
@@ -63,6 +63,7 @@ class ParticleS
         color = _color ;
 		color_orig = color;
 		colorExcited = color;
+		colorTail = ofColor(255);
 		m = mass;
 		q = charge;
 		
@@ -88,6 +89,7 @@ class ParticleS
         position = _position ;
         color = _color ;
 		color_orig = color;
+		colorExcited = color;
 		m = mass;
 		q = charge;
 		
@@ -103,7 +105,31 @@ class ParticleS
 		setTipoPart(floor(ofRandom(3)));
 
 		setupPaths();
-    };
+		
+    }
+	
+    ParticleS( ParticleData pData ) {
+		
+        position = pData.position ;
+        color = pData.color ;
+		color_orig = color;
+		colorExcited = color;
+		m = pData.m;
+		q = pData.q;
+		
+		position_prev = position;
+		angle = 0;
+		positions.push_back(position);
+		
+        velocity = pData.velocity;
+		
+        spawnPoint = position ;
+        recentlyUsed=0;
+		
+		setTipoPart(pData.tpPartic);
+		
+		setupPaths();
+	}
 	
 	void setTipoPart(int tp) {
 		tipoPart = tp;
@@ -155,7 +181,7 @@ class ParticleS
 	void draw() {
 		ofPushStyle();
 
-		ofSetColor(color);
+		ofSetColor(colorTail);
 		ofNoFill();
 		ofSetLineWidth(1);
 		
@@ -177,14 +203,17 @@ class ParticleS
 		}	
 
 		ofPushStyle();
+		ofSetColor(color);
+//		ofLogNotice(ofToString(color));
 		ofFill();
 		if(tipoPart==0) {
-			ofEllipse(position.x, position.y, 3,3);
+			ofEllipse(position.x, position.y, 9,9);
 		}
 		else if(tipoPart==1) {
 			ofPushMatrix();
 				ofTranslate(position.x, position.y);
 				ofRotate(ofGetElapsedTimeMillis());	// degrees
+			ofSetLineWidth(2);
 				ofLine(-6, 0, 6, 0);
 			ofPopMatrix();
 		}
@@ -207,7 +236,7 @@ class ParticleS
 	void drawMemoPath() {
 		
 		ofPushStyle();
-		ofSetLineWidth(4);
+		ofSetLineWidth(2);
 		ofSetColor(colorExcited);
 		for(int i=0; i<memoPaths.size(); i++) {
 			memoPaths[i].draw();

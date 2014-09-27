@@ -10,8 +10,6 @@
 #define W_WIDTH		768
 #define W_HEIGHT	768
 
-
-
 class testApp : public ofBaseApp{
 	public:
 		void setup();
