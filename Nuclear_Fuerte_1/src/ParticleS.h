@@ -55,6 +55,10 @@ class ParticleS
 	bool	bDrawLife;
 	bool	bDrawMemoPath;
 	
+	int		idEmitter;
+	
+	float	longTail;
+	
     ParticleS() ;
     
     ParticleS( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
@@ -131,6 +135,10 @@ class ParticleS
 		setupPaths();
 	}
 	
+	void setEmitter(int id) {
+		idEmitter = id;
+	}
+	
 	void setTipoPart(int tp) {
 		tipoPart = tp;
 	}
@@ -142,6 +150,7 @@ class ParticleS
 		bDrawLife = false;
 		bDrawMemoPath = true;
 		
+		longTail = 10;
 		
 //		lifeMemoPath.setStrokeColor(ofColor::blueSteel);
 //		lifeMemoPath.setColor(ofColor::blueSteel);
@@ -160,8 +169,10 @@ class ParticleS
 		
         position += velocity;
 		
+		
+		// acumular puntos
 		positions.push_back(position);
-		if(positions.size() > 10) {
+		if(positions.size() > longTail) {	
 			positions.erase(positions.begin());
 		}
 		

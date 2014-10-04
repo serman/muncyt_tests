@@ -26,13 +26,14 @@ void testApp::setup(){
 	
 	// borde exterior
 	circExt.clear();
-	circExt.arc(zentro, radioEscena, radioEscena, 0, 360);
+	circExt.arc(zentro, radioEscena, radioEscena, 0, 360, true, 60);
 	
 	
 	// zona central
 	centroLab.set(zentro, 50);
 	
 	emitter.bActivo = false;
+	totEmitters = 0;	// Para asignar identificadores a los emisores
 	
 	
 	//
@@ -46,14 +47,6 @@ void testApp::setup(){
 	bDrawPtosChoque = false;
 	bTiltCamino = false;	
 	
-	
-	testPath.setFilled(false);
-	testPath.setStrokeColor(ofColor::blueSteel);
-	testPath.setColor(ofColor::blueSteel);	
-	
-	
-//	camino.setClosed(true);
-//	camino1.setClosed(true);
 	
 	setupGUI();
 }
@@ -220,12 +213,6 @@ void testApp::draw(){
 		ofSetColor(ofColor::lime, 60);
 		ofSetLineWidth(15);
 		camino.draw();
-		ofSetColor(ofColor::white, 200);
-		ofSetLineWidth(1);
-		camino1.draw();
-		ofPopStyle();
-		
-		testPath.draw();
 	}
 	
 	for(int i=0;i<particulas.size();i++) {
@@ -279,9 +266,6 @@ void testApp::draw(){
 	// 
 	ofPushStyle();
 	int hLin = ofGetHeight()-25; int dLin = -15;
-	ofDrawBitmapString("'c' clear camino", 10,hLin); hLin+=dLin;
-	ofDrawBitmapString("num pts camino1: " + ofToString(camino1.getVertices().size()), 10,hLin); hLin+=dLin;
-	ofDrawBitmapString("num pts camino simpl: " + ofToString(camino.getVertices().size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("Num Partics: " + ofToString(particulas.size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("Num Partics old: " + ofToString(particulas_old.size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("p clear partics", 10,hLin); hLin+=dLin;
@@ -294,14 +278,7 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
 
-	if(key=='c') {
-		camino.clear();
-		camino1.clear();
-		ptsChoque.clear();
-		
-		testPath.clear();
-	}
-	else if(key=='d') swDifraccion=!swDifraccion;
+	if(key=='d') swDifraccion=!swDifraccion;
 	else if(key=='b') swMagnetField=!swMagnetField;
 	else if(key=='q') ratePartic++;
 	else if(key=='a') ratePartic = (ratePartic>2)? ratePartic-1 : 1;
@@ -330,8 +307,6 @@ void testApp::mouseMoved(int x, int y){
 void testApp::mouseDragged(int x, int y, int button){
 	if(button==0) {
 		if(bDrawingMode) {		
-			camino1.addVertex(x,y);
-			testPath.lineTo(x-15+30*ofRandom(1.0),y);	
 		}
 	}
 	else if(button==2) {
@@ -358,10 +333,6 @@ void testApp::mousePressed(int x, int y, int button){
 			ofVec2f posTmp(x,y);		
 			posTmp -= zentro;
 			if(posTmp.length()<=radioEscena) {
-				camino1.addVertex(x,y);
-			
-				testPath.newSubPath();
-				testPath.moveTo(x+30,y);
 			}
 		}
 		else emitter.bActivo = true;
@@ -381,6 +352,7 @@ void testApp::mousePressed(int x, int y, int button){
 			ofLogNotice(ofToString(angTmp));
 			ofColor cTmp = ofColor::fromHsb(ofMap(angTmp,-PI,PI, 0, 255), 255, 255, 255);
 			emTmp.setColor(cTmp);
+			emTmp.setId(totEmitters);
 		
 			emitters.push_back(emTmp);
 		}
@@ -391,13 +363,6 @@ void testApp::mousePressed(int x, int y, int button){
 void testApp::mouseReleased(int x, int y, int button){
 
 	if(button==0) {
-		camino = camino1;
-		camino.simplify(5.2f);
-
-		camino.setClosed(true);
-		camino1.setClosed(true);
-
-		testPath.close();
 	}
 	
 	emitter.bActivo = false;

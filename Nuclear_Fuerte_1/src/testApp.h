@@ -40,7 +40,7 @@ class testApp : public ofBaseApp{
 	ofColor				antiColores[3];	
 	
 	
-	ofPolyline	camino, camino1;
+	ofPolyline	camino;
 	void		tiltCamino();
 	bool		bTiltCamino;
 	
@@ -57,14 +57,13 @@ class testApp : public ofBaseApp{
 	
 	Emisor	emitter;
 	vector <Emisor>		emitters;
+	int		totEmitters;
 	
 	Centro		centroLab;
 	
 	float	magnetField;
 	bool	swMagnetField;
 	
-	
-	ofPath	testPath;
 	
 	bool	bDrawingMode;
 	bool	bDrawCaminos;

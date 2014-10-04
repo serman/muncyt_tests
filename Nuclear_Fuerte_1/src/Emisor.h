@@ -25,6 +25,8 @@ struct ParticleData {
 class Emisor {
 
 public:
+	int idEmisor;
+	
 	// posicion
 	float rho;	// controlara la energia de las particulas emitidas
 	float ang;
@@ -79,6 +81,10 @@ public:
 		// preparar forma a dibujar
 		setupIcono();
 		
+	}
+	
+	void setId(int id) {
+		idEmisor = id;
 	}
 	
 	void setColor(ofColor cc) {

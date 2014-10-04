@@ -18,13 +18,13 @@
 class Centro {
 public:
 	ofVec2f pos;
-	ofVec2f dirNeta;	
 	float radio;
 	
 	ofPolyline	circulo;
 	ofPath		circuloPath;	// Para fill
 	
 	bool	bOcupado;
+	ofVec2f dirNeta;	
 	
 	int		contadorPartics;
 	
@@ -64,7 +64,6 @@ public:
 			alpha = ofWrap(alpha,0,255);
 			circuloPath.setFillColor(ofColor(255,224,23, alpha));
 			circuloPath.setFilled(true);
-			ofLogNotice("YA");
 //			ofSetColor(255,224,23, ofMap(contadorPartics, 0, 6, 35, 255));
 			circuloPath.draw();
 		}
