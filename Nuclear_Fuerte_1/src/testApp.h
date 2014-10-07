@@ -33,6 +33,9 @@ class testApp : public ofBaseApp{
 	ofPath		borde;
 	ofPolyline	circExt;
 	
+	ofPath		anilloExterior;
+	ofMesh		ringExt;
+	
 	// colores
 	void setupColores();
 	ofColor				coloresAll[6];
@@ -58,6 +61,7 @@ class testApp : public ofBaseApp{
 	Emisor	emitter;
 	vector <Emisor>		emitters;
 	int		totEmitters;
+	bool	clearEMitters;
 	
 	Centro		centroLab;
 	

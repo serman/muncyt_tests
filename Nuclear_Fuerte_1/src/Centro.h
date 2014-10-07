@@ -15,6 +15,8 @@
  
 */
 
+#include "ParticleS.h"
+
 class Centro {
 public:
 	ofVec2f pos;
@@ -26,7 +28,14 @@ public:
 	bool	bOcupado;
 	ofVec2f dirNeta;	
 	
+	bool	bVariosEmitters;
 	int		contadorPartics;
+	vector	<int> idsEmitters;
+	vector <ParticleS> particsInside;
+	
+	ofVec2f	pTot;	// momento total por frame = SUMA masa*veloc
+	ofVec2f pMean; // momento total / contadorPartics
+	float	energy;	// energia por frame = SUMA masa*veloc^2
 	
 	Centro() {
 		dirNeta = ofVec2f(0,0);
@@ -48,8 +57,38 @@ public:
 		
 	}
 
-
-	void emiteParticulas() {
+	void reset() {
+		pTot = ofVec2f(0,0);
+		energy = 0.0;
+		
+		bVariosEmitters = false;
+		
+		contadorPartics = 0;		
+		particsDentro.clear();
+	}
+	
+	void addParticle(ParticleS _p) {
+		// mete particulas dentro:
+		//		suma momentos de las particulas
+		//		y energía
+		// analiza si vienen de varios emitters
+		if(!bVariosEmitters) {
+			// chequea solo si aun no se han detectado varios emisores
+			for(int i=0; i<particsInside.size(); i++) {
+				if(_p.idEmitter != particsInside[i].idEmitter) {
+					bVariosEmitters = true;
+					break;
+				}
+			}
+		}
+		particsInside.push_back(_p);
+		
+		pTot += _p.getMomentoP(); // m*_p.velocity;
+		energy += _p.getEnergyK();
+		
+		contadorPartics++;
+		
+		pMean = pTot/contadorPartics;
 		
 	}
 	

@@ -26,7 +26,18 @@ void testApp::setup(){
 	
 	// borde exterior
 	circExt.clear();
-	circExt.arc(zentro, radioEscena, radioEscena, 0, 360, true, 60);
+	circExt.arc(zentro, radioEscena, radioEscena, 0, 360, true, 30);
+	
+	float rext = radioEscena;
+	float rint = rext*0.95;
+	float dAngDeg = 60.0;
+	anilloExterior.setCircleResolution(30);
+	anilloExterior.setFillColor(ofColor::red);
+	anilloExterior.clear();
+	anilloExterior.arc(ofVec2f(0,0), rint, rint, 0, dAngDeg, true);
+	anilloExterior.arc(ofVec2f(0,0), rext, rext, dAngDeg, 0, false);
+	anilloExterior.close();
+	
 	
 	
 	// zona central
@@ -34,6 +45,8 @@ void testApp::setup(){
 	
 	emitter.bActivo = false;
 	totEmitters = 0;	// Para asignar identificadores a los emisores
+	emitter.setId(totEmitters);
+	totEmitters++;
 	
 	
 	//
@@ -47,22 +60,33 @@ void testApp::setup(){
 	bDrawPtosChoque = false;
 	bTiltCamino = false;	
 	
+	clearEMitters = false;	
 	
 	setupGUI();
+	
+	ofBackgroundGradient(ofColor(30), ofColor::black, OF_GRADIENT_CIRCULAR);
+	ofSetBackgroundAuto(false);
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+	
+	// rest del contador
+	centroLab.reset();
+	
 	// add alguna particula desde un lateral
 //	addParticleLateral();
+	
+	if(clearEMitters) {
+		emitters.clear();
+		clearEMitters = false;
+	}
 	
 	addParticleFromEmiter(emitter);
 	for(int i=0; i<emitters.size(); i++) {
 		addParticleFromEmiter(emitters[i]);
 	}
 	
-	// reset contador
-	centroLab.contadorPartics = 0;
 	
 	
 	// update partics
@@ -93,7 +117,16 @@ void testApp::update(){
 				particulas[i].color = ofColor::red;
 				bCruce = particulas[i].setInside(true);	
 				
-				centroLab.contadorPartics++;
+				
+				
+				// que vaya sumando momentos
+				
+//				centroLab.contadorPartics++;
+				centroLab.addParticle(particulas[i]);
+				
+				// **** 
+				
+				
 			}
 			else {
 				particulas[i].color = particulas[i].color_orig; 
@@ -135,6 +168,9 @@ void testApp::update(){
 		if( distZ.length() > W_HEIGHT ){
 			particulas_old.push_back(particulas[i]);
 			particulas.erase(particulas.begin()+i);
+			
+			// limitar a 100 las particulas
+			if(particulas_old.size()>100) particulas_old.erase(particulas_old.begin()+i);
 		}
 	}
 
@@ -143,22 +179,7 @@ void testApp::update(){
 
 }
 
-void testApp::tiltCamino() {
-	ofPolyline pl = camino;
-	camino.clear();
-	
-	float maxDespl = 2.0;
-	for(int i=0; i<pl.size(); i++) {
-		camino.addVertex( pl[i]+ofVec2f(ofRandom(-maxDespl, maxDespl), ofRandom(-maxDespl, maxDespl)) );
-	}
-	camino.close();
-	
-	
-}
-
-
 void testApp::addParticleLateral() {
-	
 	//	float rnd = ofRandom(1.0);
 	//	if(rnd<0.15) {
 	if(ofGetFrameNum()%ratePartic==0) {
@@ -170,14 +191,11 @@ void testApp::addParticleLateral() {
 		
 		int nColor = floor(ofRandom(6)); // 0,1,2 colores y 3,4,5 anticolores
 		ofColor cTmp = coloresAll[nColor];
+		
+		p.idEmitter = -1;
 
 		ParticleS p = ParticleS(ofVec3f(0,ofRandom(ofGetHeight()),0), ofVec3f(v,0,0), cTmp, mass, carga );
 		particulas.push_back(p);
-		
-		
-		// pos, vel, color, mass, charge
-//		ParticleS pTmp = ParticleS(ofVec3f(0,ofRandom(ofGetHeight())) , ofVec3f(ofRandom(10.0, 30.0), 0) , ofColor::white, 1.0, 0.0);
-		
 	}
 }
 
@@ -189,6 +207,10 @@ void testApp::addParticleFromEmiter(Emisor &em) {
 			pd.position += zentro;
 			pd.color = coloresAll[pd.nColor];
 			ParticleS p = ParticleS(pd);
+			
+			p.idEmitter = em.idEmisor;
+			p.refEmitter = &em;
+			
 			particulas.push_back(p);
 		}
 	}
@@ -198,9 +220,13 @@ void testApp::addParticleFromEmiter(Emisor &em) {
 //--------------------------------------------------------------
 void testApp::draw(){
 
-	ofBackground(ofColor::black);
+//	ofBackground(ofColor::black);
+//	ofBackgroundGradient(ofColor(30), ofColor::black, OF_GRADIENT_CIRCULAR);
+	ofPushStyle();
+	ofSetColor(0,20);
+	ofRect(0,0,ofGetWidth(),ofGetHeight());
+	ofPopStyle();
 	
-	//
 	//
 	// PARTICULAS 
 	//
@@ -229,8 +255,6 @@ void testApp::draw(){
 		ofPopStyle();
 	}
 	
-	
-	
 	// 
 	// NUCLEAR FUERTE
 	// 
@@ -255,16 +279,27 @@ void testApp::draw(){
 	
 	// decoraci—n borde Exerior
 	ofPushStyle();
+	// linea blanca
 	ofSetLineWidth(4);
 	ofSetColor(255);
 	ofNoFill();
 	circExt.draw();
+	
+	ofPushMatrix();
+	ofTranslate(zentro.x,zentro.y,0);
+	for(int i=0; i<6; i++) {
+		ofRotateZ(60);
+		anilloExterior.setFillColor(colores[i%3]);
+		anilloExterior.draw();
+	}
+	ofPopMatrix();
 	ofPopStyle();
 	
 	//
 	// INFO
 	// 
 	ofPushStyle();
+	ofSetColor(200);
 	int hLin = ofGetHeight()-25; int dLin = -15;
 	ofDrawBitmapString("Num Partics: " + ofToString(particulas.size()), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("Num Partics old: " + ofToString(particulas_old.size()), 10,hLin); hLin+=dLin;
@@ -286,7 +321,8 @@ void testApp::keyPressed(int key){
 		particulas.clear();
 	}
 	else if(key=='o') {
-		emitters.clear();
+		clearEMitters = true;
+//		emitters.clear();
 	}
 	else if(key=='m') bDrawingMode=!bDrawingMode;
 	else if(key=='e') bDrawCaminos=!bDrawCaminos;
@@ -353,7 +389,8 @@ void testApp::mousePressed(int x, int y, int button){
 			ofColor cTmp = ofColor::fromHsb(ofMap(angTmp,-PI,PI, 0, 255), 255, 255, 255);
 			emTmp.setColor(cTmp);
 			emTmp.setId(totEmitters);
-		
+			totEmitters++;
+			
 			emitters.push_back(emTmp);
 		}
 	}
@@ -403,7 +440,9 @@ void testApp::setupGUI() {
 	gui1->addToggle("(e) Draw Camino ON/OFF", &bDrawCaminos );
 	gui1->addToggle("(r) Draw Colisiones ON/OFF", &bDrawPtosChoque );
 	gui1->addToggle("(t) Tilt Camino ON/OFF", &bTiltCamino );
+	gui1->addToggle("(o) Clear Emitters", &clearEMitters );
 
+	
 //	ofDrawBitmapString("'c' clear camino", 10,hLin); hLin+=dLin;
 //	ofDrawBitmapString("p clear partics", 10,hLin); hLin+=dLin;
 	//	
@@ -472,3 +511,17 @@ void testApp::setupColores() {
 		coloresAll[i+3] = antiColores[i];
 	}
 }
+
+void testApp::tiltCamino() {
+	ofPolyline pl = camino;
+	camino.clear();
+	
+	float maxDespl = 2.0;
+	for(int i=0; i<pl.size(); i++) {
+		camino.addVertex( pl[i]+ofVec2f(ofRandom(-maxDespl, maxDespl), ofRandom(-maxDespl, maxDespl)) );
+	}
+	camino.close();
+}
+
+
+

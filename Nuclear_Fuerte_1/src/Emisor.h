@@ -58,7 +58,7 @@ public:
 
 		c = ofColor::red;
 
-		ratePartic = 10;
+		ratePartic = 5;
 		
 		bActivo = true;
 		
@@ -74,7 +74,7 @@ public:
 
 		c = ofColor::red;
 		
-		ratePartic = 10;
+		ratePartic = 5;
 
 		bActivo = true;
 		
@@ -135,6 +135,8 @@ public:
 		ofPushMatrix();
 		// translate
 		ofTranslate(posXY.x, posXY.y);
+		ofSetColor(200);
+		ofDrawBitmapString(ofToString(idEmisor), 10,10);
 		// rotate
 		ofRotateZ(90+RAD_TO_DEG*(ang));
 		

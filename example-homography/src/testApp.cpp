@@ -167,18 +167,24 @@ void testApp::logHomogr() {
 
 ofVec2f testApp::proyectaPunto(ofVec2f ptSrc) {
 	
-	vector<cv::Vec2f> psSrc, psDst;
-	psSrc.push_back(toCv(ptSrc));
-	psSrc.push_back(cv::Vec2f(0,0));
-	
-	// invertir!
-	//// metodo de matriz con puntos
-	// http://stackoverflow.com/questions/17852182/runnig-cvwarpperspective-on-points
-//	perspectiveTransform(psSrc, psDst, homography.inv());// map_matrix);
-	perspectiveTransform(psSrc, psDst, homography_inv);// map_matrix);
-//	perspectiveTransform(psSrc, psDst, map_matrix.inv());
-	
-	ofVec2f ppt = toOf(psDst[0]);
+	ofVec2f ppt = ofVec2f(0,0);
+	if(homographyReady) { 
+		vector<cv::Vec2f> psSrc, psDst;
+		psSrc.push_back(toCv(ptSrc));
+		psSrc.push_back(cv::Vec2f(0,0));
+		
+		// invertir!
+		//// metodo de matriz con puntos
+		// http://stackoverflow.com/questions/17852182/runnig-cvwarpperspective-on-points
+	//	perspectiveTransform(psSrc, psDst, homography.inv());// map_matrix);
+		perspectiveTransform(psSrc, psDst, homography_inv);// map_matrix);
+	//	perspectiveTransform(psSrc, psDst, map_matrix.inv());
+		
+		ppt = toOf(psDst[0]);
+	}
+	else {
+		ppt = ptSrc;
+	}
 	return ppt;
 	
 	// otros http://stackoverflow.com/questions/17852182/runnig-cvwarpperspective-on-points	

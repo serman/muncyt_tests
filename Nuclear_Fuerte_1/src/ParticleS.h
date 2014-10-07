@@ -29,6 +29,8 @@ class ParticleS
 {
     public :
 	
+	int id;
+	
 	float m;	// mass
 	float q;	// carga
     ofVec3f position , velocity ;
@@ -56,6 +58,7 @@ class ParticleS
 	bool	bDrawMemoPath;
 	
 	int		idEmitter;
+	Emisor* refEmitter;	
 	
 	float	longTail;
 	
@@ -255,7 +258,14 @@ class ParticleS
 		ofPopStyle();
 	}
 	
-	
+	ofVec3f getMomentoP() {
+		
+		return m*velocity;
+	}
+
+	float getEnergyK() {
+		return m*velocity.lengthSquared()/2.0;
+	}
 	
 	
     
