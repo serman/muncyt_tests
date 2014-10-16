@@ -10,17 +10,8 @@
 #ifndef _EMISOR
 #define _EMISOR
 
-#include "testApp.h"
-
-struct ParticleData {
-	float m;
-	float q;
-    ofVec3f position;
-    ofVec3f velocity;
-    ofColor color;
-    int		nColor;
-	int		tpPartic;
-};
+#include "nuclear_fuerte.h"
+//#include "ParticleTipos.h"
 
 class Emisor {
 
@@ -29,7 +20,7 @@ public:
 	
 	// posicion
 	float rho;	// controlara la energia de las particulas emitidas
-	float ang;
+	float ang;	// radians
 	ofVec2f posXY;
 	
 	// hacia donde van las particulas
@@ -58,7 +49,7 @@ public:
 
 		c = ofColor::red;
 
-		ratePartic = 5;
+		ratePartic = 3;
 		
 		bActivo = true;
 		
@@ -74,7 +65,7 @@ public:
 
 		c = ofColor::red;
 		
-		ratePartic = 5;
+		ratePartic = 3;
 
 		bActivo = true;
 		
@@ -115,7 +106,7 @@ public:
 		posXY = ofVec2f(_x, _y);
 		
 		rho = posXY.length();
-		ang = atan2(posXY.y, posXY.x);
+		ang = atan2(posXY.y, posXY.x);	// -PI, PI
 //		ofLogNotice(ofToString(ang));
 	}
 	
@@ -135,8 +126,9 @@ public:
 		ofPushMatrix();
 		// translate
 		ofTranslate(posXY.x, posXY.y);
-		ofSetColor(200);
-		ofDrawBitmapString(ofToString(idEmisor), 10,10);
+		// id
+//		ofSetColor(200);
+//		ofDrawBitmapString(ofToString(idEmisor), 10,10);
 		// rotate
 		ofRotateZ(90+RAD_TO_DEG*(ang));
 		
@@ -149,23 +141,56 @@ public:
 	
 	// Da valores de particulas que emite
 	ParticleData getParticleData() {
-		ofVec2f pos = posXY+ofVec2f(ofRandom(6)-3,ofRandom(6)-3);
+		float maxRnd = 2;
+		ofVec2f pos = posXY+ofVec2f(ofRandom(maxRnd)-maxRnd/2.0,ofRandom(maxRnd)-maxRnd/2.0);
 		pData.position = pos;
 		
 		// velocidad
-		// se podría dar mas velocidad cuanto más lejos este del centro (resize de pos bastaría)
-		pos.normalize();
-		pos*=-(12+ofRandom(6));
+		// se da mas velocidad cuanto más lejos este del centro 
+		// (resize de pos bastaría)
+		float ddMax = 384;
+		float ddMin = 50.0;	// radio de la zona central
+		float dd = pos.length();
+		pos.normalize();	
+		pos*=-ofMap(dd,ddMin,ddMax, 10,18);
 		pData.velocity = pos;
+
+		int nRadio = floor(ofMap(dd, ddMin, ddMax, 0,3));
+		nRadio = ofClamp(nRadio, 0,3);
 		
-		pData.nColor = floor(ofRandom(6));
+		// dependendo del sector en el que se esta, y de la distancia se crea una u otra particula
+		float angulo = (ang<0)? ang+TWO_PI : ang;
+		int nSector = floor(angulo/ofDegToRad(30.0));	// 12 sectores
+
+		int nnTipo = (nSector+nRadio)%6;
 		
-		pData.m = 1+ofRandom(5);
-		pData.q = floor(ofRandom(10))-5;
-		pData.tpPartic = floor(ofRandom(3));
+		// tipo va a depender de la distancia o del angulo
+		//		pData.tpPartic = floor(ofRandom(3));
+		// tipos 0, 1, 2, 3, 4, 5
+//		pData.tpPartic = floor(ofClamp(dd/(ddMax*0.75)*6,0,5)); 
+		pData.tpPartic = nnTipo; 
+
+		
+		if(false) {
+		// - - - devolver solo con pos, veloc y tipo - - - 
+
+			// Segun el tipo asinar color
+	//		pData.nColor = floor(ofRandom(6));
+			pData.nColor = floor(dd/ddMax*6);
+			
+					
+			// que dependa del tipo!
+			pData.m = 1+ofRandom(5);
+			pData.q = floor(ofRandom(5))-2;
+		}
+		
 		return pData;
 		
 	}
+	
+
+	
+	
 	
 };
 

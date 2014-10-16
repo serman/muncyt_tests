@@ -40,13 +40,12 @@ void testApp::setup() {
 	//Set up drawing variables
 	W = wk; //1024;					//Desired screen size
 	H = hk; //768;
-	outPixels.allocate( W, H, OF_IMAGE_GRAYSCALE );
+	outPixels.allocate(		W, H, OF_IMAGE_GRAYSCALE );
 	
 	calibrating = true;		//Set calibrating mode at start
 	shift = ofPoint( 320, 20 );	//The value of shifting
 	//camera's image from the corner of the screen
 	
-	//	while(openNIDevice.getWidth()==0) {	}
 	rectCalib = ofRectangle(shift.x, shift.y, wk, hk);
 	ofLogNotice("rectCalib: " + ofToString(rectCalib));
 	
@@ -65,9 +64,6 @@ void testApp::setup() {
 	
 	colorImg.allocate(wk, hk, OF_IMAGE_COLOR);  
 	tempGrayImage.allocate(wk, hk);  
-//	monoPixels.allocate(wk, hk,OF_PIXELS_MONO);  
-//	monoPixels_diff.allocate(wk, hk,OF_PIXELS_MONO);  
-//	grayPixels.allocate(wk, hk,OF_PIXELS_MONO);  
 
 	// backgroundImage
 	backgroundImage.allocate(wk, hk);  
@@ -111,11 +107,6 @@ void testApp::setup() {
 	
 	// 
 	// BT BlobTracker
-	// wait for half a frame before forgetting something
-//	tracker.setPersistence(15);
-//	// an object can move up to 32 pixels per frame
-//	tracker.setMaximumDistance(32);
-	
 	// wait for half a frame before forgetting something
 	contourFinderX.getTracker().setPersistence(15);
 	// an object can move up to 32 pixels per frame
@@ -164,6 +155,21 @@ void testApp::update(){
 
 
 void testApp::updateModo0() {
+	// Cargar imagen en ShriPixels
+	
+	// restar background: backgroundDepth
+	
+	
+	
+	// Check zero values
+	
+	
+	// l’mite min-max
+	
+	
+	
+	
+	
 	if ( !calibrating && corners.size() == 4 ) {
 		//Analyze depth
 		
@@ -263,9 +269,6 @@ void testApp::updateModo1() {
 	contourFinderX.setThreshold(threshold);	
 	contourFinderX.findContours(grayImage);
 	
-//	tracker.track(contourFinderX.getBoundingRects());
-
-	
 }
 
 //--------------------------------------------------------------
@@ -358,6 +361,12 @@ void testApp::draw(){
 			
 		}
 		ofPopStyle();
+	}
+	
+	else if(modo==2) {
+		// MODO CALIBRACION
+		
+		
 	}
 	
 	ofSetColor(255);

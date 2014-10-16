@@ -31,7 +31,6 @@ public:
 	void windowResized(int w, int h);
 
 	ofxKinect kinect;
-	// ofxOpenNI openNIDevice;			//Depth camera
 	
 	int wk, hk;	// domensiones de la imagen de la kinect
 	
@@ -71,9 +70,7 @@ public:
 	int wk1, hk1;
 	ofRectangle	rect_RGB, rect_Depth, rect_Bckgnd, rect_Blobs;
 	
-	
 	ofxCvGrayscaleImage grayImage; // grayscale depth image
-
 
 	ofImage					colorImg;  
 	
@@ -81,8 +78,6 @@ public:
 	ofxCvGrayscaleImage		paso_openCV;
 	ofxCvGrayscaleImage		grayImage_No_Blur;	
 	ofxCvGrayscaleImage		backgroundImage;	// para ver el background
-//	ofxCvFloatImage		tempGrayImage;  
-//	ofxCvShortImage		backgroundImage;	// para ver el background
 
 
 	// background substraction
@@ -91,6 +86,11 @@ public:
 	ofxCvGrayscaleImage	grayThreshFar;
 	float				thresholdLow, thresholdHigh;
 	bool				bLearnBakground;
+
+	
+	ofxCvFloatImage	fThreshNear, fThreshFar;
+	
+
 	
 	
 	// ContourFinder CF
@@ -106,13 +106,17 @@ public:
 	bool	bWarp;
 	
 	
+	//
+	// MODO 2 CALIBR
+	//
+	
 	// Calibracion
 	bool	bSetZentros;
 	bool	bZentro, bZentroDepth;
 	ofVec2f	zentro, zentroDepth;
 	ofVec2f	zentroDst;
-	ofPoint					entrada[4];				// imagen de la camara
-	ofPoint					destino_camera_warp[4];	// imagen generada	
+	ofPoint	entrada[4];				// imagen de la camara
+	ofPoint	destino_camera_warp[4];	// imagen generada	
 	
 	
 	//
@@ -135,11 +139,8 @@ public:
 	// TUIO viene con la clas de tracking/contourFinder de ofxNCore (que no la cargo)
 	// Si se quiere reutilizar hay que sustituir una clase llamada Blob
 	bool	bTUIO;
-	TUIO				myTUIO;
+	TUIO	myTUIO;
 	vector<BlobX>	blobs;
-//	string				tmpLocalHost;
-//  int					tmpPort;
-//	int					tmpFlashPort;
 	
 	
 };

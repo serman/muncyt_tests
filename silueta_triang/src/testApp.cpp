@@ -176,6 +176,7 @@ void testApp::update() {
 										ctmpc = ctmp;
 								}
 								else if(modoFill==2) {
+									// color segun la posicion de cada vertice
 									int nBanda = floor(a.y/hBanda);
 									ctmpa = colorFluor[nBanda%colorFluor.size()];
 									nBanda = floor(b.y/hBanda);

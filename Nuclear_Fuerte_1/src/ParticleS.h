@@ -22,8 +22,8 @@
 
 #include "ofMain.h"
 
-#include "Emisor.h"
-
+//#include "Emisor.h"
+#include "ParticleTipos.h"
 
 class ParticleS
 {
@@ -37,13 +37,18 @@ class ParticleS
     ofVec3f position_prev;	
 	vector<ofVec3f> positions;
     ofVec3f acceleration ;          //smoothing applied to velocity
+	
     ofVec3f spawnPoint ;            //original location to line up the picture
     ofColor color, color_orig, colorExcited, colorTail ;
     char recentlyUsed;
 	
-	int	tipoPart;
+	int		tipoPart;
+	float	amortV;
+	float	tLife;
 	
-	float angle;
+	float	angle;
+	
+	float	dt;
 	
 	// para chequear colision con ofPolyline
 	bool inside;
@@ -58,94 +63,85 @@ class ParticleS
 	bool	bDrawMemoPath;
 	
 	int		idEmitter;
-	Emisor* refEmitter;	
 	
 	float	longTail;
+	
+	bool	swActivaB;
 	
     ParticleS() ;
     
     ParticleS( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
     {
         position = _position ;
-        color = _color ;
-		color_orig = color;
-		colorExcited = color;
-		colorTail = ofColor(255);
+        setColor(_color, _color, _color);
 		m = mass;
 		q = charge;
-		
-		
+				
 		position_prev = position;
-		
 		positions.push_back(position);
 		
-		angle = 0;
-		
         velocity = ofVec3f ( ofRandom ( -2 , 2 ) , ofRandom ( -2 , 2 ) , ofRandom ( -2 , -2 ) ) ;
-        spawnPoint = _position ;
-        recentlyUsed=0;
+
+		amortV = 1.0;
+		tLife = 2.0*10;	
 		
-		setTipoPart(floor(ofRandom(3)));
+		setupCommon();
 		
-		setupPaths();
-		
-    };
+    }
 	
     ParticleS( ofVec3f _position , ofVec3f _vel , ofColor _color, float mass = 1.0, float charge = 0.0 )
     {
         position = _position ;
-        color = _color ;
-		color_orig = color;
-		colorExcited = color;
+        setColor(_color, _color, _color);
 		m = mass;
 		q = charge;
 		
 		position_prev = position;
-		angle = 0;
 		positions.push_back(position);
-		
         velocity = _vel;
 		
-        spawnPoint = _position ;
-        recentlyUsed=0;
-
-		setTipoPart(floor(ofRandom(3)));
-
-		setupPaths();
+		amortV = 1.0;
+		tLife = 2.0*10;	
+		
+		setupCommon();
 		
     }
 	
     ParticleS( ParticleData pData ) {
 		
-        position = pData.position ;
-        color = pData.color ;
-		color_orig = color;
-		colorExcited = color;
+        position = pData.position;
+        velocity = pData.velocity;
 		m = pData.m;
 		q = pData.q;
+		tipoPart = pData.tpPartic;
+		amortV = pData.amortV;
+		tLife = pData.tLife;	
+		// por ahora pd solo tiene .color
+        setColor(pData.color, pData.color, pData.color);
+		setupCommon();
 		
-		position_prev = position;
+	}
+	
+	void setColor(ofColor cc, ofColor cc1, ofColor cc2) {
+        color = cc ;
+		color_orig = cc1;
+		colorExcited = cc2;
+		colorTail = color;
+	}
+	
+	void setupCommon() {
 		angle = 0;
-		positions.push_back(position);
-		
-        velocity = pData.velocity;
-		
         spawnPoint = position ;
         recentlyUsed=0;
 		
-		setTipoPart(pData.tpPartic);
+		swActivaB = false;
 		
 		setupPaths();
+		
+		dt = 0.5;
+		
 	}
-	
-	void setEmitter(int id) {
-		idEmitter = id;
-	}
-	
-	void setTipoPart(int tp) {
-		tipoPart = tp;
-	}
-	
+
 	void setupPaths() {
 		
 		inside = false;
@@ -153,24 +149,82 @@ class ParticleS
 		bDrawLife = false;
 		bDrawMemoPath = true;
 		
+
 		longTail = 10;
 		
-//		lifeMemoPath.setStrokeColor(ofColor::blueSteel);
-//		lifeMemoPath.setColor(ofColor::blueSteel);
-//		lifeMemoPath.moveTo(position.x, position.y);
+		//		lifeMemoPath.setStrokeColor(ofColor::blueSteel);
+		//		lifeMemoPath.setColor(ofColor::blueSteel);
+		//		lifeMemoPath.moveTo(position.x, position.y);
 	}
+	
+	void setTipoPart(int tipo) {
+		//	// devuelve un ParticleData para un tipo de particula.
+		//	// No da valor a posicion ni velocidad
+		//
+		tipoPart = tipo;
+		if(tipo==0) {
+			m = 1.0;
+			q = 0;
+			amortV = 1.0;
+			tLife = 5.0;
+		}
+		else if(tipo==1) {
+			m = 1.0;
+			q = 0;
+			amortV = 2.0;
+			tLife = 5.0;
+		}
+		else if(tipo==2) {
+			m = 1.0;
+			q = -1.0;
+			amortV = 3.0;
+			tLife = 3.0;
+		}
+		else if(tipo==3) {
+			m = 1.0;
+			q = 1.0;
+			amortV = 2.0;
+			tLife = 2.0;
+		}
+		else if(tipo==4) {
+			m = 1.0;
+			q = 2.0;
+			amortV = 3.0;
+			tLife = 2.0;
+		}
+		else if(tipo==5) {
+			m = 1.0;
+			q = -2.0;
+			amortV = 4.0;
+			tLife = 1.0;
+		}
+		
+		tLife*=10;
+	}
+	
+	
+	
+	
+	
+	
+	
+	void setEmitter(int id) {
+		idEmitter = id;
+	}
+	
+	
 
     void update(){
 		position_prev = position;
 		
-    	velocity += acceleration/m;
+    	velocity += acceleration/m*dt;
 		
 		// muy graciosete:
 		//	https://sites.google.com/site/ofauckland/examples/curly-moving-particles		
 		//		angle += ofSignedNoise(position.x, position.y)*PI;
 		//		velocity.rotate(angle, ofVec3f(0,0,1));		
 		
-        position += velocity;
+        position += velocity*dt;
 		
 		
 		// acumular puntos
@@ -188,6 +242,8 @@ class ParticleS
 		}
 		
         acceleration=acceleration*0;
+		
+		tLife -= 0.1;
     }	
 	
 	
@@ -220,26 +276,36 @@ class ParticleS
 		ofSetColor(color);
 //		ofLogNotice(ofToString(color));
 		ofFill();
+		ofPushMatrix();
+		ofTranslate(position.x, position.y);		
 		if(tipoPart==0) {
-			ofEllipse(position.x, position.y, 9,9);
+			ofEllipse(0,0, 4,4);
 		}
 		else if(tipoPart==1) {
-			ofPushMatrix();
-				ofTranslate(position.x, position.y);
 				ofRotate(ofGetElapsedTimeMillis());	// degrees
-			ofSetLineWidth(2);
-				ofLine(-6, 0, 6, 0);
-			ofPopMatrix();
+				ofSetLineWidth(1);
+				ofLine(-4, 0, 4, 0);
 		}
-		else {
-			ofRect(position.x-3, position.y-3, 6,6);
+		else if(tipoPart==2) {
+			ofRect(-2, -2, 4,4);
 		}
+		else if(tipoPart==3) {
+			ofTriangle(3,3, -3,-3, 0,3);
+//			ofRect(-1, -3, 2,6);
+		}
+		else if(tipoPart==4) {
+			ofEllipse(-3, -3, 4,4);
+		}
+		else if(tipoPart==5) {
+			ofRect(-3, -3, 6,6);
+		}
+		ofPopMatrix();		
 		ofPopStyle();
 		
 		if(inside) {
 			ofPushStyle();
 			ofNoFill();
-			ofEllipse(position.x, position.y, 9,9);			
+			ofEllipse(position.x, position.y, 4,4);			
 			ofPopStyle();
 		}
 		
@@ -248,10 +314,12 @@ class ParticleS
 	}
 	
 	void drawMemoPath() {
-		
 		ofPushStyle();
 		ofSetLineWidth(2);
-		ofSetColor(colorExcited);
+//		ofSetColor(colorExcited);
+		ofColor ce = color;//Excited;
+		ce.a = 100.0;
+		ofSetColor(ce);
 		for(int i=0; i<memoPaths.size(); i++) {
 			memoPaths[i].draw();
 		}
@@ -404,3 +472,4 @@ class ParticleS
 	}
 };
 #endif
+
