@@ -481,13 +481,13 @@
 			isa = PBXGroup;
 			children = (
 				7F533EC119B0805D00D51AC3 /* ParticleS.h */,
+				7F4E668019E83D8900646EA8 /* ParticleTipos.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* nuclear_fuerte.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* nuclear_fuerte.h */,
 				7FBA6C0919B68DB500BE8B68 /* utilsGeom.cpp */,
 				7FD399E619B786D600799A25 /* Emisor.h */,
 				7F50918F19B8D375008F3E0A /* Centro.h */,
-				7F4E668019E83D8900646EA8 /* ParticleTipos.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

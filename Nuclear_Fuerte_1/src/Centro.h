@@ -17,6 +17,8 @@
 
 #include "ParticleS.h"
 
+#include "Emisor.h"
+
 class Centro {
 public:
 	ofVec2f pos;
@@ -42,6 +44,11 @@ public:
 	vector<float>	energies;
 	ofVec2f pMeanT;	// media temporal del momento total
 	float	energyMeanT;
+	
+	int sumaTipos;
+	
+	vector<ParticleData> newPartics;
+
 	
 	
 	Centro() {
@@ -73,93 +80,9 @@ public:
 		
 		contadorPartics = 0;		
 		particsInside.clear();
+		
+		sumaTipos = 0;
 	}
-	
-	void updateEnd() {
-		// Para llamar al final del update
-		
-		pMeans.push_back(pTot);
-		energies.push_back(energy);
-		if(pMeans.size()>nMuestrasT) {
-			pMeans.erase(pMeans.begin(), pMeans.begin()+1);
-			energies.erase(energies.begin(), energies.begin()+1);
-		}
-		
-		pMeanT = ofVec2f(0,0);
-		energyMeanT = 0;
-		for(int i=0; i<pMeans.size(); i++) {
-			pMeanT+=pMeans[i];
-			energyMeanT+=energies[i];
-		}
-		pMeanT=pMeanT/pMeans.size();
-		energyMeanT/=energies.size();
-		
-		
-		
-		// emitir particulas
-		// segun el angulo, el pMeanT y la energyMeanT
-		vector<ParticleData> newPartics;
-		
-		// partics a crear
-		int nPartics = 1;
-		
-		// Si p < pMin:		
-		// Si la energia es peque, emitir partics lentas en dir media
-		// Si la energia es grande, emitir partics de todo tipo en todas direcciones
-		// para energias medias, distribucion experimental: 
-		// hay un minEnerg y maxEnerg: funcion sin(angulo) para asignar direccion de salida (o similar)
-
-		// generar PDatas
-		
-
-//			float maxRnd = 2;
-//			ofVec2f pos = posXY+ofVec2f(ofRandom(maxRnd)-maxRnd/2.0,ofRandom(maxRnd)-maxRnd/2.0);
-//			pData.position = pos;
-//			
-//			// velocidad
-//			// se da mas velocidad cuanto más lejos este del centro 
-//			// (resize de pos bastaría)
-//			float ddMax = 380;
-//			float dd = pos.length();
-//			pos.normalize();
-//			pos*=-ofMap(dd,ddMax*0.25,ddMax, 10,18);
-//			pData.velocity = pos;
-//			
-//			// tipo va a depender de la distancia o del angulo
-//			//		pData.tpPartic = floor(ofRandom(3));
-//			// tipos 0, 1, 2, 3, 4, 5
-//			pData.tpPartic = floor(ofClamp(dd/(ddMax*0.75)*6,0,5)); 
-//			
-//			
-//			if(false) {
-//				// - - - devolver solo con pos, veloc y tipo - - - 
-//				
-//				// Segun el tipo asinar color
-//				//		pData.nColor = floor(ofRandom(6));
-//				pData.nColor = floor(dd/ddMax*6);
-//				
-//				
-//				// que dependa del tipo!
-//				pData.m = 1+ofRandom(5);
-//				pData.q = floor(ofRandom(5))-2;
-//			}
-			
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-	
 	
 	
 	
@@ -179,15 +102,114 @@ public:
 			}
 		}
 		particsInside.push_back(_p);
+		contadorPartics++;		
 		
 		pTot += _p.getMomentoP(); // m*_p.velocity;
 		energy += _p.getEnergyK();
 		
-		contadorPartics++;
+		sumaTipos += _p.tipoPart;
+		
+	}
+	
+	
+	bool updateEnd(int rate) {
+
+		bool bNuevasPart = false;
 		
 		pMean = pTot/contadorPartics;
 		
+		// Para llamar al final del update
+		
+		pMeans.push_back(pTot);
+		energies.push_back(energy);
+		if(pMeans.size()>nMuestrasT) {
+			pMeans.erase(pMeans.begin(), pMeans.begin()+1);
+			energies.erase(energies.begin(), energies.begin()+1);
+		}
+		
+		pMeanT = ofVec2f(0,0);
+		energyMeanT = 0;
+		for(int i=0; i<pMeans.size(); i++) {
+			pMeanT+=pMeans[i];
+			energyMeanT+=energies[i];
+		}
+		pMeanT=pMeanT/pMeans.size();
+		energyMeanT/=energies.size();
+		
+		
+		// emitir particulas
+		// segun el angulo, el pMeanT y la energyMeanT
+		newPartics.clear();
+		
+		// partics a crear
+		// Dependerá de si hay particulas y la energia acumulada
+		// y debe seguir el rate de creación
+		int nPartics = 0;
+		if(ofGetFrameNum()%rate == 0 && contadorPartics>1) {
+			nPartics = floor(energy/100);
+
+			// Si ademas el pTot es bajo y la energ alta (>600), generar muchas más partículas
+			
+			
+//			ofLogNotice() << "ENERGY: " << energy << "    nPartics: " << nPartics;
+			
+		}
+		
+		// Dispersión angular: depende del momento neto total y de la energia acumulada
+		
+		
+		// Direccion principal: la de pMean
+
+		
+		// Si p < pMin:		
+		// Si la energia es peque, emitir partics lentas en dir media
+		// Si la energia es grande, emitir partics de todo tipo en todas direcciones
+		// para energias medias, distribucion experimental: 
+		// hay un minEnerg y maxEnerg: funcion sin(angulo) para asignar direccion de salida (o similar)
+		
+		
+		for(int i=0; i<nPartics; i++) {
+			
+			ParticleData pData;
+			
+			float maxRnd = 1;
+			// posicion
+			ofVec2f pos = ofVec2f(0,0);
+			pData.position = pos;
+	  		
+			// velocidad
+			// direccion: la del pTot (o pMean)
+			ofVec2f vel = pTot;			
+			float ddMax = 380;
+			float dd = vel.length();
+			vel.normalize();
+			
+			// Dispersión, depende del valor de pTot: Si es bajo, más dispersión
+			// vel.rotate....
+			
+			vel*=18; //-ofMap(dd,ddMax*0.25,ddMax, 10,18);
+			pData.velocity = vel;
+			
+			
+			// tipo: combinacion de los tipos de las particulas incidentes
+			// particsInside
+			int ntipo = (sumaTipos+i)%6;
+//			pData.tpPartic = ntipo; //floor(ofClamp(dd/(ddMax*0.75)*6,0,5)); 
+			pData.setTipoPart(ntipo); //floor(ofClamp(dd/(ddMax*0.75)*6,0,5)); 
+
+			newPartics.push_back(pData);
+			
+			// En algunas partículas, poner dos pero con +q y -q
+			
+			bNuevasPart = true;
+		}
+		
+		
+		return bNuevasPart;
+		
 	}
+	
+	
 	
 	
 	void draw() {
@@ -223,8 +245,8 @@ public:
 		ofLine(pos.x, pos.y, pos.x+pMeanT.x, pos.y+pMeanT.y);
 		
 		
-		ofDrawBitmapString("pTot: " + ofToString(modPTot), pos.x+50, pos.y+50);
-		ofDrawBitmapString("E: " + ofToString(energy), pos.x+50, pos.y+70);
+		ofDrawBitmapString("pTot: " + ofToString(modPTot) + "   pMeanT: " + ofToString(pMeanT.length()), pos.x+50, pos.y+50);
+		ofDrawBitmapString("E: " + ofToString(energy) + "   eMeanT: " + ofToString(energyMeanT), pos.x+50, pos.y+70);
 		
 		ofDisableSmoothing();
 		ofPopStyle();
@@ -232,4 +254,49 @@ public:
 		bOcupado = false;
 	}
 	
+
+void drawStats(ofRectangle cuad) {
+	ofPushMatrix();
+	ofPushStyle();
+	{
+		ofTranslate(cuad.x, cuad.y, 0);
+		ofNoFill();
+		ofSetColor(200);
+		ofSetLineWidth(1.0);
+		ofRect(0,0, cuad.width, cuad.height);
+		
+		if(pMeans.size() > 0) {
+			ofMesh linP, linE;
+			linP.setMode(OF_PRIMITIVE_LINE_STRIP);
+			linE.setMode(OF_PRIMITIVE_LINE_STRIP);
+			float di = cuad.width / pMeans.size();
+			for(int i=0; i<pMeans.size(); i++) {
+				linP.addVertex(ofPoint(di*i, cuad.height-ofMap(pMeans[i].length(), 0, 50, 0, cuad.height), 0));
+				linE.addVertex(ofPoint(di*i, cuad.height-ofMap(energies[i], 0, 1000, 0,cuad.height), 0));
+			}
+			ofNoFill();
+			float h_pMeanT = cuad.height-ofMap(pMeanT.length(), 0, 50, 0, cuad.height);
+			float h_eMeanT = cuad.height-ofMap(energyMeanT, 0, 1000, 0, cuad.height);
+			ofSetColor(ofColor::blueSteel);
+			linP.draw();
+			ofSetColor(ofColor::blue);
+			ofLine(0, h_pMeanT, cuad.width, h_pMeanT);
+			ofDrawBitmapString("momento", 10,cuad.height+15);
+			
+			ofSetColor(ofColor::red);
+			linE.draw();
+			
+			ofSetColor(ofColor::orange);
+			ofLine(0, h_eMeanT, cuad.width, h_eMeanT);
+			ofDrawBitmapString("energia", 10,cuad.height+30);
+			
+			
+		}
+	}
+	ofPopStyle();
+	ofPopMatrix();
+	
+}
+
 };
+

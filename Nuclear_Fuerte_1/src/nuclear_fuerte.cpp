@@ -95,6 +95,10 @@ void nuclear_fuerte::exit_Scena() {
 	// - particles
 	particulas.clear();
 	emitters.clear();
+	particulas_old.clear();
+	
+	particulas_out.clear();
+	particulas_out_old.clear();
 	
 }
 
@@ -122,22 +126,29 @@ void nuclear_fuerte::update(){
 		addParticleFromEmiter(emitters[i]);
 	}
 	
-	
+	//
 	// update partics
+	//
 	
 	// aplicar fuerzas de interaccion part-part
 	
 	for(int i=0;i<particulas.size();i++) {
+//		ofLogNotice("Update partic " + ofToString(i));
 		
 		// aplicar fuerzas globales
 //		if(swMagnetField && particulas[i].inside) {
+//		if(swMagnetField && (particulas[i].idEmitter==-10) && particulas[i].swActivaB) {
 		if(swMagnetField && particulas[i].swActivaB) {
 			particulas[i].forceMagnetZ(magnetField);
 		}
 		
+		// interaccion spin?
+		
 		
 		// mover 
+//		ofLogNotice("Update partic " + ofToString(i) + "  --> update");
 		particulas[i].update();
+//		ofLogNotice("Update partic " + ofToString(i) + "  --> update Fin");
 		
 //		float rnd = ofRandom(1.0);
 //		if(rnd<0.02) particulas[i].forceRadAround(zentro, 3.0, 300.0);
@@ -151,7 +162,11 @@ void nuclear_fuerte::update(){
 				particulas[i].color = ofColor::red;
 				bCruce = particulas[i].setInside(true);	
 				
-				centroLab.addParticle(particulas[i]);
+				
+				// que solo a–ada las particulas que entran, no las del emisor central
+				if(particulas[i].idEmitter != -10) {
+					centroLab.addParticle(particulas[i]);
+				}
 				
 			}
 			else {
@@ -210,7 +225,11 @@ void nuclear_fuerte::update(){
 		}
 		
 		// Borrar las que hayan pasado el punto central
-		if( centroLab.bVariosEmitters && (distZ.dot(particulas[i].velocity)>0) ) {	// && alguna caracteristica!
+		if( particulas[i].idEmitter != -10 && 
+		   centroLab.bVariosEmitters && 
+//		if( emitters.size()>1 && 
+		    (distZ.dot(particulas[i].velocity)>0) ) // && alguna caracteristica!
+		{	
 			particulas_old.push_back(particulas[i]);
 			particulas.erase(particulas.begin()+i);
 			continue;
@@ -225,11 +244,32 @@ void nuclear_fuerte::update(){
 	
 
 	// update centro
-	centroLab.updateEnd();
+	if(centroLab.updateEnd( ratePartic )) {
+//		ofLogNotice("Update Centro");
+		//
+		// emitir particulas del centro
+		for(int i=0; i<centroLab.newPartics.size(); i++) {
+//			if(ofGetFrameNum()%ratePartic==0) {
+				ParticleData pd = centroLab.newPartics[i];	
+				// la devuelve con un tipo de particula, position, velocity
+				pd.position += zentro;
+				pd.color = coloresAll[pd.nColor];
+
+				ParticleS p = ParticleS(pd);
+				p.idEmitter = -10;
+				p.inside = false;
+				p.setInside(true);
+				particulas.push_back(p);
+//			}
+			
+
+		}
+//		ofLogNotice("Update Centro FIN");
+	
+	}
 	
 	// Update emitter
 	emitter.setPos_XY(mouseX-zentro.x, mouseY-zentro.y);
-	
 	
 	
 
@@ -355,6 +395,7 @@ void nuclear_fuerte::draw(){
 	// 
 	// Escena centrada y simetr’a circular
 	centroLab.draw();
+	
 	ofPushMatrix();
 		ofTranslate(zentro.x, zentro.y, zentro.z);
 		// Decorados
@@ -394,6 +435,10 @@ void nuclear_fuerte::draw(){
 	anilloExteriorLineas.draw();
 	ofPopMatrix();
 	ofPopStyle();
+
+	
+	centroLab.drawStats(ofRectangle(ofGetWidth()-200,0,200,200));
+	
 	
 	//
 	// INFO
@@ -408,6 +453,9 @@ void nuclear_fuerte::draw(){
 	ofDrawBitmapString("Partics dentro: " + ofToString(centroLab.contadorPartics), 10,hLin); hLin+=dLin;
 	ofDrawBitmapString("FR: " + ofToString(ofGetFrameRate()), 10,hLin); hLin+=dLin;
 	ofPopStyle();
+	
+	
+	
 }
 
 //--------------------------------------------------------------
@@ -503,11 +551,6 @@ void nuclear_fuerte::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void nuclear_fuerte::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void nuclear_fuerte::dragEvent(ofDragInfo dragInfo){ 
 
 }
 

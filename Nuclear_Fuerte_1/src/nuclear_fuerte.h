@@ -29,7 +29,7 @@ class nuclear_fuerte : public ofBaseApp{
 		void mousePressed(int x, int y, int button);
 		void mouseReleased(int x, int y, int button);
 		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
+//		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
 	bool	bSetBack;
@@ -91,6 +91,7 @@ class nuclear_fuerte : public ofBaseApp{
 	ofImage	imgPunto;
 	
 	ParticleData newParticleData(int tipo);
+	vector<ParticleS>	particulas_out, particulas_out_old;
 	
     void exit();
 	
