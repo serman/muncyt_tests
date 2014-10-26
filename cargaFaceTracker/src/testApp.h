@@ -26,6 +26,7 @@ class testApp : public ofBaseApp{
 	
 	bool	swEnLinea;
 	bool	swWireframe;
+	bool	swTexture;
 	
 		Cara	cara;
 

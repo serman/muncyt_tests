@@ -5,6 +5,7 @@ void testApp::setup(){
 
 	swEnLinea = true;
 	swWireframe = false;
+	swTexture = true;
 	
 	// cargar caras
 	cargaCaras();
@@ -59,9 +60,11 @@ void testApp::draw(){
 			//	ofRotateX(ofMap(ofGetMouseY(), 0,ofGetHeight(), -180, 180.0)*0.5);
 			ofScale(6,6,scaleZ);//scaleY);//1);
 			ofSetColor(255);
-			caras[i].img.bind();
-			caras[i].meanObjMesh.drawFaces();
-			caras[i].img.unbind();	
+			if(swTexture) {
+				caras[i].img.bind();
+				caras[i].meanObjMesh.drawFaces();
+				caras[i].img.unbind();	
+			}
 			if(swWireframe) caras[i].objMesh.drawWireframe();
 			
 			ofSetColor(0,255,0);
@@ -84,15 +87,22 @@ void testApp::draw(){
 			//	ofScale(scaleX,scaleY,1);
 //			ofRotateY(ofMap(ofGetMouseX(), 0,ofGetWidth(), -180, 180.0)*0.5 + 180);
 			//	ofRotateX(ofMap(ofGetMouseY(), 0,ofGetHeight(), -180, 180.0)*0.5);
-			ofScale(6,6,scaleZ);//scaleY);//1);
+			ofScale(6,6,6);//scaleZ);//scaleY);//1);
 //			ofRotateY(-360.0/nCaras*i+90);
 			ofRotateY(-90);
 			ofSetColor(255);
-			caras[i].img.bind();
-			caras[i].objMesh.drawFaces();
-			caras[i].img.unbind();
+			if(swTexture) {
+				caras[i].img.bind();
+				caras[i].objMesh.drawFaces();
+				caras[i].img.unbind();
+			} 
 			ofNoFill();
-			if(swWireframe) caras[i].objMesh.drawWireframe();
+			if(swWireframe) {
+//				caras[i].objMesh.drawWireframe();
+				
+//				caras[i].objVbo.draw(GL_LINES, 0, caras[i].objVbo.getNumVertices());
+				caras[i].objVbo.draw(GL_LINES, ofGetFrameNum()%caras[i].objVbo.getNumVertices(), 30);
+			}
 			
 			ofSetColor(0,255,0);
 			//	ofLine(0,0,0,ofGetHeight());
@@ -119,6 +129,7 @@ void testApp::draw(){
 void testApp::keyPressed(int key){
 	if(key=='m') swEnLinea=!swEnLinea;
 	else if(key=='w') swWireframe=!swWireframe;
+	else if(key=='t') swTexture=!swTexture;
 }
 
 //--------------------------------------------------------------
