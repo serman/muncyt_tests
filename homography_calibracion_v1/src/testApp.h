@@ -16,28 +16,17 @@ public:
 	
 	ofImage left, right, warpedColor;
 	vector<ofVec2f> leftPoints, rightPoints;
-	bool movingPoint;
+	bool movingPoint, isDstPt;
 	ofVec2f* curPoint;
-
-	void loadMatrix();
-	void saveMatrix();
-	bool bSaveMatrix;
-	bool homographyReady;
-	
-	void calcHomography();
-	cv::Mat homography, homography_inv;
-	cv::Mat	map_matrix;
-	void logHomogr();	
-	ofVec2f			proyectaPunto(ofVec2f ptSrc);
-	vector<ofVec2f> proyectaPuntos(vector<ofVec2f> ptsSrc);
-	
-	
-	bool movePoint(vector<ofVec2f>& points, ofVec2f point);
-	bool movePoint(Calibrador ccc, ofVec2f point);	
-	
 	
 	Calibrador	calib1;
 	ofRectangle	c1_Src;
 	ofRectangle	c1_Dst;
+
+	bool movePoint(vector<ofVec2f>& points, ofVec2f point);
+		
+	bool bSaveMatrix;
+	
+	ofImage		imgCalibr;
 	
 };

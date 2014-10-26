@@ -29,10 +29,6 @@
 		7F22CBF119DEBAB300F2A92D /* ofxOscParameterSync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F22CBE019DEBAB300F2A92D /* ofxOscParameterSync.cpp */; };
 		7F22CBF219DEBAB300F2A92D /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F22CBE219DEBAB300F2A92D /* ofxOscReceiver.cpp */; };
 		7F22CBF319DEBAB300F2A92D /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F22CBE419DEBAB300F2A92D /* ofxOscSender.cpp */; };
-		7F403F3819DE1E0A00FFFEA9 /* ofxTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F403F3019DE1E0A00FFFEA9 /* ofxTCPClient.cpp */; };
-		7F403F3919DE1E0A00FFFEA9 /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F403F3219DE1E0A00FFFEA9 /* ofxTCPManager.cpp */; };
-		7F403F3A19DE1E0A00FFFEA9 /* ofxTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F403F3419DE1E0A00FFFEA9 /* ofxTCPServer.cpp */; };
-		7F403F3B19DE1E0A00FFFEA9 /* ofxUDPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F403F3619DE1E0A00FFFEA9 /* ofxUDPManager.cpp */; };
 		7F9A4D0C19DB088F002C5F8D /* ofxUI2DGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4C7419DB088E002C5F8D /* ofxUI2DGraph.cpp */; };
 		7F9A4D0D19DB088F002C5F8D /* ofxUI2DPad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4C7619DB088F002C5F8D /* ofxUI2DPad.cpp */; };
 		7F9A4D0E19DB088F002C5F8D /* ofxUIBaseDraws.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4C7819DB088F002C5F8D /* ofxUIBaseDraws.cpp */; };
@@ -81,6 +77,7 @@
 		7F9A4D3919DB088F002C5F8D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4CD519DB088F002C5F8D /* tinyxmlerror.cpp */; };
 		7F9A4D3A19DB088F002C5F8D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4CD619DB088F002C5F8D /* tinyxmlparser.cpp */; };
 		7F9A4D3B19DB088F002C5F8D /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F9A4CD819DB088F002C5F8D /* ofxXmlSettings.cpp */; };
+		7FB4034B19F6F58C0064283D /* Calibrador.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FB4034919F6F58C0064283D /* Calibrador.cpp */; };
 		7FC4D08419DDB903008D1041 /* ETF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC4CE8219DDB902008D1041 /* ETF.cpp */; };
 		7FC4D08519DDB903008D1041 /* fdog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC4CE8319DDB902008D1041 /* fdog.cpp */; };
 		7FC4D08619DDB903008D1041 /* Calibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FC4CE9219DDB902008D1041 /* Calibration.cpp */; };
@@ -237,16 +234,6 @@
 		7F22CBE519DEBAB300F2A92D /* ofxOscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOscSender.h; sourceTree = "<group>"; };
 		7F22CBF619DEF4B000F2A92D /* BlobX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlobX.h; path = comm/BlobX.h; sourceTree = "<group>"; };
 		7F22CC2919DEFB5800F2A92D /* xmlConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlConfig.h; sourceTree = "<group>"; };
-		7F403F2E19DE1E0A00FFFEA9 /* ofxNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNetwork.h; sourceTree = "<group>"; };
-		7F403F2F19DE1E0A00FFFEA9 /* ofxNetworkUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNetworkUtils.h; sourceTree = "<group>"; };
-		7F403F3019DE1E0A00FFFEA9 /* ofxTCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTCPClient.cpp; sourceTree = "<group>"; };
-		7F403F3119DE1E0A00FFFEA9 /* ofxTCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTCPClient.h; sourceTree = "<group>"; };
-		7F403F3219DE1E0A00FFFEA9 /* ofxTCPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTCPManager.cpp; sourceTree = "<group>"; };
-		7F403F3319DE1E0A00FFFEA9 /* ofxTCPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTCPManager.h; sourceTree = "<group>"; };
-		7F403F3419DE1E0A00FFFEA9 /* ofxTCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTCPServer.cpp; sourceTree = "<group>"; };
-		7F403F3519DE1E0A00FFFEA9 /* ofxTCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTCPServer.h; sourceTree = "<group>"; };
-		7F403F3619DE1E0A00FFFEA9 /* ofxUDPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUDPManager.cpp; sourceTree = "<group>"; };
-		7F403F3719DE1E0A00FFFEA9 /* ofxUDPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUDPManager.h; sourceTree = "<group>"; };
 		7F9A4C7319DB088E002C5F8D /* ofxUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUI.h; sourceTree = "<group>"; };
 		7F9A4C7419DB088E002C5F8D /* ofxUI2DGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUI2DGraph.cpp; sourceTree = "<group>"; };
 		7F9A4C7519DB088F002C5F8D /* ofxUI2DGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUI2DGraph.h; sourceTree = "<group>"; };
@@ -347,6 +334,8 @@
 		7F9A4CD619DB088F002C5F8D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		7F9A4CD819DB088F002C5F8D /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		7F9A4CD919DB088F002C5F8D /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		7FB4034919F6F58C0064283D /* Calibrador.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Calibrador.cpp; sourceTree = "<group>"; };
+		7FB4034A19F6F58C0064283D /* Calibrador.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Calibrador.h; sourceTree = "<group>"; };
 		7FC4CE7919DDB902008D1041 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		7FC4CE7D19DDB902008D1041 /* ETF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETF.h; sourceTree = "<group>"; };
 		7FC4CE7E19DDB902008D1041 /* fdog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fdog.h; sourceTree = "<group>"; };
@@ -795,32 +784,6 @@
 			path = src;
 			sourceTree = "<group>";
 		};
-		7F403F2A19DE1E0A00FFFEA9 /* ofxNetwork */ = {
-			isa = PBXGroup;
-			children = (
-				7F403F2D19DE1E0A00FFFEA9 /* src */,
-			);
-			name = ofxNetwork;
-			path = ../../../addons/ofxNetwork;
-			sourceTree = SOURCE_ROOT;
-		};
-		7F403F2D19DE1E0A00FFFEA9 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				7F403F2E19DE1E0A00FFFEA9 /* ofxNetwork.h */,
-				7F403F2F19DE1E0A00FFFEA9 /* ofxNetworkUtils.h */,
-				7F403F3019DE1E0A00FFFEA9 /* ofxTCPClient.cpp */,
-				7F403F3119DE1E0A00FFFEA9 /* ofxTCPClient.h */,
-				7F403F3219DE1E0A00FFFEA9 /* ofxTCPManager.cpp */,
-				7F403F3319DE1E0A00FFFEA9 /* ofxTCPManager.h */,
-				7F403F3419DE1E0A00FFFEA9 /* ofxTCPServer.cpp */,
-				7F403F3519DE1E0A00FFFEA9 /* ofxTCPServer.h */,
-				7F403F3619DE1E0A00FFFEA9 /* ofxUDPManager.cpp */,
-				7F403F3719DE1E0A00FFFEA9 /* ofxUDPManager.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
 		7F9A4A8519DB088D002C5F8D /* ofxUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -959,6 +922,15 @@
 				7F9A4CD919DB088F002C5F8D /* ofxXmlSettings.h */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		7FB4034819F6F58C0064283D /* calibrador */ = {
+			isa = PBXGroup;
+			children = (
+				7FB4034919F6F58C0064283D /* Calibrador.cpp */,
+				7FB4034A19F6F58C0064283D /* Calibrador.h */,
+			);
+			path = calibrador;
 			sourceTree = "<group>";
 		};
 		7FC4C83E19DDB8F5008D1041 /* ofxCv */ = {
@@ -1153,7 +1125,6 @@
 			isa = PBXGroup;
 			children = (
 				7F22CBBB19DEBAB300F2A92D /* ofxOsc */,
-				7F403F2A19DE1E0A00FFFEA9 /* ofxNetwork */,
 				7FC4C83E19DDB8F5008D1041 /* ofxCv */,
 				7F9A4A8519DB088D002C5F8D /* ofxUI */,
 				7F9A4CD119DB088F002C5F8D /* ofxXmlSettings */,
@@ -1277,6 +1248,7 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				7FB4034819F6F58C0064283D /* calibrador */,
 				7F22CBB719DEBAA100F2A92D /* comm */,
 				7F22CBF619DEF4B000F2A92D /* BlobX.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -1503,10 +1475,6 @@
 				7FC4D08D19DDB903008D1041 /* Tracker.cpp in Sources */,
 				7FC4D08E19DDB903008D1041 /* Utilities.cpp in Sources */,
 				7FC4D08F19DDB903008D1041 /* Wrappers.cpp in Sources */,
-				7F403F3819DE1E0A00FFFEA9 /* ofxTCPClient.cpp in Sources */,
-				7F403F3919DE1E0A00FFFEA9 /* ofxTCPManager.cpp in Sources */,
-				7F403F3A19DE1E0A00FFFEA9 /* ofxTCPServer.cpp in Sources */,
-				7F403F3B19DE1E0A00FFFEA9 /* ofxUDPManager.cpp in Sources */,
 				7F22CBBA19DEBAA100F2A92D /* TUIO.cpp in Sources */,
 				7F22CBE619DEBAB300F2A92D /* IpEndpointName.cpp in Sources */,
 				7F22CBE719DEBAB300F2A92D /* NetworkingUtils.cpp in Sources */,
@@ -1522,6 +1490,7 @@
 				7F22CBF119DEBAB300F2A92D /* ofxOscParameterSync.cpp in Sources */,
 				7F22CBF219DEBAB300F2A92D /* ofxOscReceiver.cpp in Sources */,
 				7F22CBF319DEBAB300F2A92D /* ofxOscSender.cpp in Sources */,
+				7FB4034B19F6F58C0064283D /* Calibrador.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,8 @@
 #include "BlobX.h"
 #include "TUIO.h"
 
+#include "Calibrador.h"
+
 
 class testApp : public ofBaseApp{
 
@@ -59,8 +61,6 @@ public:
 
 	void	drawMarco(ofRectangle rect);
 	void	drawMarco(float xx, float yy, float ww, float hh);
-
-	
 	
 	
 	// MODO 1
@@ -117,6 +117,11 @@ public:
 	ofVec2f	zentroDst;
 	ofPoint	entrada[4];				// imagen de la camara
 	ofPoint	destino_camera_warp[4];	// imagen generada	
+	
+	
+	Calibrador	calib2;
+	bool		cargaCalib;
+	string		nombreCalib;
 	
 	
 	//

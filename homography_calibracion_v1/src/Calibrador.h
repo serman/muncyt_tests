@@ -23,14 +23,19 @@ public:
 	ofVec2f*	curPoint;
 	
 	void addPts(ofVec2f ptS, ofVec2f ptD);
+
+	void drawPoints(ofRectangle rDst, ofRectangle rSrc);
+	void drawPoints(vector<ofVec2f>& points, ofRectangle rr);
 	
 	void calcHomography();
 	cv::Mat homography, homography_inv;
 	cv::Mat	map_matrix;
 	void logHomogr();	
 	
-	ofVec2f			transf_Punto(ofVec2f pt);
-	vector<ofVec2f> transf_Puntos(vector<ofVec2f> pts);
+	ofVec2f			transf_Punto(ofVec2f pt, bool inv = false);
+	vector<ofVec2f> transf_Puntos(vector<ofVec2f> pts, bool inv = false);
+	
+	void			warpImage(ofImage imgSrc, ofImage& warpedImage);
 
 	void loadMatrix(string fileName);
 	void saveMatrix(string fileName);
@@ -40,6 +45,9 @@ public:
 	
 	int size();
 
+	ofRectangle	areaRef;
+	void		setAreaRef(ofRectangle	_areaRef);
+	
 };
 
 #endif

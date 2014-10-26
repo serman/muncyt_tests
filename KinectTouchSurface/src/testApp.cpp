@@ -13,6 +13,8 @@ void testApp::setup() {
 	/// print the device list
 	kinect.listDevices();
 	// enable depth->video image calibration
+	// Esto me libra del calib1
+	//
 	kinect.setRegistration(true);
 	kinect.init(false,true);  // no-IR, si-RGB
 	//kinect.init(false, false); // disable video image (faster fps)
@@ -97,8 +99,8 @@ void testApp::setup() {
 	bZentro = false;
 	bZentroDepth = false;
 	
-	wk1 = 320;// 400;
-	hk1 = 240;// 300;
+	wk1 = 400;// 320;
+	hk1 = 300;// 240;
 
 	rect_RGB = ofRectangle(shift.x, shift.y, wk1, hk1);
 	rect_Depth = ofRectangle(shift.x+wk1+10, shift.y, wk1, hk1);
@@ -133,6 +135,12 @@ void testApp::setup() {
 	
 	
 	bPeque = false;
+	
+	
+	nombreCalib = "calibracion/calib2";
+//	calib1.setRects(c1_Src, c1_Dst);
+	calib2.setRects(rect_RGB, rect_Blobs);
+
 	
 }
 
@@ -594,7 +602,13 @@ void testApp::setupGUI() {
 	gui1->addSpacer();
 	gui1->addToggle("set zentros", &bSetZentros);
 	gui1->addSpacer();
+	gui1->addSpacer();
+	gui1->addLabel("Calibraci—n RGB=>Proyeccion");
+	gui1->addToggle("Carga Calibracion", &cargaCalib);	
+	gui1->addSpacer();
+	gui1->addSpacer();
 	gui1->addToggle("Send TUIOs", &bTUIO);
+
 	
 	
 	
@@ -634,6 +648,11 @@ void testApp::guiEvent(ofxUIEventArgs &e) {
 		contourFinderX.setMaxAreaRadius((float)max_blob_size*wk/100.0);
 	}
 	
+	
+	else if(name == "Carga Calibracion") {
+		calib2.loadMatrix(nombreCalib);		
+	}
+	
 //	contourFinderX.setMinArea(min_blob_size);
 //	contourFinderX.setFindHoles(bFindHoles);
 	
@@ -646,7 +665,7 @@ void testApp::exit()
 //	openNIDevice.stop();
 	kinect.close();
 	
-	gui1->saveSettings("gui1Settings.xml");    
+	gui1->saveSettings("gui1Settings.xml"); 
 	delete gui1;
 	
 	//    float *buffer;
