@@ -24,6 +24,8 @@ class testApp : public ofBaseApp{
 	
 		void cargaCaras();
 	
+	bool	swEnLinea;
+	bool	swWireframe;
 	
 		Cara	cara;
 

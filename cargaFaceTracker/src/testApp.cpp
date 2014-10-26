@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 
+	swEnLinea = true;
+	swWireframe = false;
 	
 	// cargar caras
 	cargaCaras();
@@ -40,13 +42,13 @@ void testApp::draw(){
 	
 	float scaleX = ofMap(ofGetMouseX(), 0,ofGetWidth(), 0.0, 10.0);
 	float scaleY = ofMap(ofGetMouseY(), 0,ofGetHeight(), 0.0, 10.0);
-	
+	float scaleZ = 2.0;
 	
 	int nCaras = caras.size();
 	
 	float zz = -600;
 	
-	if(false) {
+	if(swEnLinea) {
 	// EN LINEA
 		for(int i=0; i<nCaras; i++){
 			ofPushMatrix();
@@ -55,11 +57,12 @@ void testApp::draw(){
 			//	ofScale(scaleX,scaleY,1);
 			ofRotateY(ofMap(ofGetMouseX(), 0,ofGetWidth(), -180, 180.0)*0.5 + 180);
 			//	ofRotateX(ofMap(ofGetMouseY(), 0,ofGetHeight(), -180, 180.0)*0.5);
-			ofScale(6,6,scaleY);//1);
+			ofScale(6,6,scaleZ);//scaleY);//1);
 			ofSetColor(255);
 			caras[i].img.bind();
 			caras[i].meanObjMesh.drawFaces();
 			caras[i].img.unbind();	
+			if(swWireframe) caras[i].objMesh.drawWireframe();
 			
 			ofSetColor(0,255,0);
 			//	ofLine(0,0,0,ofGetHeight());
@@ -81,13 +84,15 @@ void testApp::draw(){
 			//	ofScale(scaleX,scaleY,1);
 //			ofRotateY(ofMap(ofGetMouseX(), 0,ofGetWidth(), -180, 180.0)*0.5 + 180);
 			//	ofRotateX(ofMap(ofGetMouseY(), 0,ofGetHeight(), -180, 180.0)*0.5);
-			ofScale(6,6,scaleY);//1);
+			ofScale(6,6,scaleZ);//scaleY);//1);
 //			ofRotateY(-360.0/nCaras*i+90);
 			ofRotateY(-90);
 			ofSetColor(255);
 			caras[i].img.bind();
-			caras[i].meanObjMesh.drawFaces();
-			caras[i].img.unbind();	
+			caras[i].objMesh.drawFaces();
+			caras[i].img.unbind();
+			ofNoFill();
+			if(swWireframe) caras[i].objMesh.drawWireframe();
 			
 			ofSetColor(0,255,0);
 			//	ofLine(0,0,0,ofGetHeight());
@@ -105,11 +110,15 @@ void testApp::draw(){
 	ofLine(ofGetWidth()/2,0,ofGetWidth()/2,ofGetHeight());
 	ofLine(ofGetWidth()/2,0,ofGetWidth()/2,ofGetHeight());
 	
+	ofDrawBitmapString("'m' para cambiar modo de presentaci—n", 20, 20);
+	ofDrawBitmapString("'w' para dibujar wireframe", 20, 35);
+	
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-
+	if(key=='m') swEnLinea=!swEnLinea;
+	else if(key=='w') swWireframe=!swWireframe;
 }
 
 //--------------------------------------------------------------
