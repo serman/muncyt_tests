@@ -39,6 +39,10 @@ class nuclear_fuerte : public ofBaseApp{
 	float		radioEscena;
 	ofPath		borde;
 	ofPolyline	circExt;
+	float		radioZentro;
+	float		r1, r2;
+	
+	ofVbo	anilloFondo1, anilloFondo2;
 	
 	ofPath		anilloExterior;
 	ofPath		anilloExteriorLineas;
@@ -76,6 +80,7 @@ class nuclear_fuerte : public ofBaseApp{
 	
 	float	magnetField;
 	bool	swMagnetField;
+	bool	changeMagneticField;
 	
 	
 	bool	bDrawingMode;

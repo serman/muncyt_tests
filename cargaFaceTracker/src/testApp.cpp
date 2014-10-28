@@ -122,6 +122,7 @@ void testApp::draw(){
 	
 	ofDrawBitmapString("'m' para cambiar modo de presentaci—n", 20, 20);
 	ofDrawBitmapString("'w' para dibujar wireframe", 20, 35);
+	ofDrawBitmapString("'t' para dibujar texturas", 20, 50);
 	
 }
 

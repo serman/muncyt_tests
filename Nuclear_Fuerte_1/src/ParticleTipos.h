@@ -33,19 +33,19 @@ struct ParticleData {
 			m = 1.0;
 			q = 0;
 			amortV = 1.0;
-			tLife = 4.0;
+			tLife = 3.0;
 		}
 		else if(tipo==1) {
 			m = 1.0;
 			q = 0;
 			amortV = 2.0;
-			tLife = 4.0;
+			tLife = 3.0;
 		}
 		else if(tipo==2) {
 			m = 1.5;
 			q = -1.0;
 			amortV = 3.0;
-			tLife = 3.0;
+			tLife = 2.5;
 		}
 		else if(tipo==3) {
 			m = 2.0;

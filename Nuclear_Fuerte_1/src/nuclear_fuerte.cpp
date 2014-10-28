@@ -15,7 +15,7 @@ void nuclear_fuerte::setup(){
 	// setup geometria del sketch
 	zentro = ofVec3f(ofGetWidth()/2.0,W_HEIGHT/2.0,0);
 
-	radioEscena = W_HEIGHT/2*0.95;
+	radioEscena = W_HEIGHT/2;
 	// Borde Negro circular
 	borde.clear();
 	ofColor ctmp = ofColor::black;//red;//black;
@@ -32,7 +32,7 @@ void nuclear_fuerte::setup(){
 	circExt.arc(zentro, radioEscena, radioEscena, 0, 360, true, 60);
 	
 	float rext = radioEscena;
-	float rint = rext*0.95;
+	float rint = rext*0.97;
 	float dAngDeg = 60.0;
 	anilloExterior.setCircleResolution(60);
 	anilloExterior.setFillColor(ofColor::red);
@@ -53,8 +53,24 @@ void nuclear_fuerte::setup(){
 	
 	
 	// zona central
-	centroLab.set(zentro, 50);
+	radioZentro = 50;
+	centroLab.set(zentro, radioZentro);
+	
+	r1 = radioZentro+(rint-radioZentro)/3.0;
+	r2 = radioZentro+(rint-radioZentro)*2.0/3.0;
 
+	ofMesh	mesh1, mesh2;
+	
+	nDivs = 180;
+	for(int i=0; i<nDivs; i++) {
+		float ang = TWO_PI/nDivs*i;
+		mesh1.addVertex(ofVec3f(zentro.x+r1*cos(ang), zentro.y+r1*sin(ang),0));
+		mesh1.addColor(ofColor(100,80));
+		mesh2.addVertex(ofVec3f(zentro.x+r2*cos(ang), zentro.y+r2*sin(ang),0));
+		mesh2.addColor(ofColor(100,80));
+	}
+	anilloFondo1.setMesh(mesh1, GL_STATIC_DRAW);
+	anilloFondo2.setMesh(mesh2, GL_STATIC_DRAW);
 	
 	ofSetBackgroundAuto(bSetBack);
 	
@@ -105,6 +121,14 @@ void nuclear_fuerte::exit_Scena() {
 
 //--------------------------------------------------------------
 void nuclear_fuerte::update(){
+	
+	// Variar MagnetField Auto
+	if(changeMagneticField) {
+		if(ofRandom(1.0)<0.01) {
+			magnetField = ofRandom(2.0)-1.0;
+		}
+		
+	}
 	
 	// rest del contador
 	centroLab.reset();
@@ -168,7 +192,7 @@ void nuclear_fuerte::update(){
 					centroLab.addParticle(particulas[i]);
 				}
 				
-			}
+			}	
 			else {
 				particulas[i].color = particulas[i].color_orig; 
 				bCruce = particulas[i].setInside(false);
@@ -245,27 +269,21 @@ void nuclear_fuerte::update(){
 
 	// update centro
 	if(centroLab.updateEnd( ratePartic )) {
-//		ofLogNotice("Update Centro");
-		//
 		// emitir particulas del centro
 		for(int i=0; i<centroLab.newPartics.size(); i++) {
 //			if(ofGetFrameNum()%ratePartic==0) {
-				ParticleData pd = centroLab.newPartics[i];	
-				// la devuelve con un tipo de particula, position, velocity
-				pd.position += zentro;
-				pd.color = coloresAll[pd.nColor];
+			ParticleData pd = centroLab.newPartics[i];	
+			// la devuelve con un tipo de particula, position, velocity
+			pd.position += zentro;
+			pd.color = coloresAll[pd.nColor];
 
-				ParticleS p = ParticleS(pd);
-				p.idEmitter = -10;
-				p.inside = false;
-				p.setInside(true);
-				particulas.push_back(p);
+			ParticleS p = ParticleS(pd);
+			p.idEmitter = -10;
+			p.inside = false;
+			p.setInside(true);
+			particulas.push_back(p);
 //			}
-			
-
 		}
-//		ofLogNotice("Update Centro FIN");
-	
 	}
 	
 	// Update emitter
@@ -308,6 +326,8 @@ void nuclear_fuerte::addParticleFromEmiter(Emisor &em) {
 			ParticleS p = ParticleS(pd);			
 			p.idEmitter = em.idEmisor;			
 			particulas.push_back(p);
+			
+			em.setColor(pd.color);
 		}
 	}
 //	ofLogNotice("addParticleFromEmiter FIN");
@@ -352,9 +372,19 @@ void nuclear_fuerte::draw(){
 		ofSetColor(255,100);
 		ofSetCircleResolution(60);
 		ofNoFill();
-		ofSetLineWidth(0.8);
-		ofEllipse(zentro.x, zentro.y, radioEscena*2.0/3.0*2, radioEscena*2.0/3.0*2);
-		ofEllipse(zentro.x, zentro.y, radioEscena*1.0/3.0*2, radioEscena*1.0/3.0*2);
+		ofSetLineWidth(0.5);
+	
+		anilloFondo1.draw(GL_LINES, 0, anilloFondo1.getNumVertices());
+		anilloFondo2.draw(GL_LINES, 0, anilloFondo2.getNumVertices());
+	
+		ofSetLineWidth(0.3);
+		for(int i=0; i<12; i++) {
+			float ang=TWO_PI/12*i;
+			ofLine(zentro.x+radioZentro*cos(ang), zentro.y+radioZentro*sin(ang), 
+				   zentro.x+radioEscena*cos(ang), zentro.y+radioEscena*sin(ang));
+		
+		}
+	
 	ofPopStyle();
 	
 	
@@ -365,6 +395,7 @@ void nuclear_fuerte::draw(){
 	ofEnableSmoothing();
 	ofEnableAntiAliasing();
 
+
 	if(bDrawCaminos) {
 		ofPushStyle();
 		ofSetColor(ofColor::lime, 60);
@@ -372,12 +403,14 @@ void nuclear_fuerte::draw(){
 		camino.draw();
 	}
 	
-	
+
+	ofEnableAlphaBlending();	
 	// Dibujar part’culas
 	for(int i=0;i<particulas.size();i++) {
 		particulas[i].draw();
 //		particulas[i].drawMemoPath();
 	}
+	ofDisableAlphaBlending();
 	
 	if(bDrawPtosChoque) {
 		ofPushStyle();
@@ -412,7 +445,7 @@ void nuclear_fuerte::draw(){
 	// Borde Escena
 	borde.draw();
 	
-	// decoraci—n borde Exerior
+	// decoraci—n borde Exterior
 	// hay que animarla un poco
 	ofPushStyle();
 	// linea blanca
@@ -566,6 +599,7 @@ void nuclear_fuerte::setupGUI() {
 	//    gui1->addSpacer();
 	gui1->addLabel("Magnetic Field");
 	gui1->addToggle("(b) Magnetic Field ON/OFF", &swMagnetField );
+	gui1->addToggle("Variar Auto MagnetF ON/OFF", &changeMagneticField );
 	gui1->addSlider("Magnetic Force", -1.0, 1.0, &magnetField);
 	
 	gui1->addSpacer();
@@ -629,6 +663,7 @@ void nuclear_fuerte::exit()
 	// - particles
 	particulas.clear();
 	emitters.clear();
+	particulas_old.clear();
 	
 }
 

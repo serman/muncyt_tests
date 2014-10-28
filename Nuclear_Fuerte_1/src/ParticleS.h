@@ -218,13 +218,14 @@ class ParticleS
 		
     	velocity += acceleration/m*dt;
 		
+		velocity-=velocity*amortV/300.0;
+		
 		// muy graciosete:
 		//	https://sites.google.com/site/ofauckland/examples/curly-moving-particles		
 		//		angle += ofSignedNoise(position.x, position.y)*PI;
 		//		velocity.rotate(angle, ofVec3f(0,0,1));		
 		
         position += velocity*dt;
-		
 		
 		// acumular puntos
 		positions.push_back(position);
@@ -238,13 +239,14 @@ class ParticleS
 		// puntos dentro de un polyline
 		if(inside) {
 			int nn = memoPaths.size();
-			if(memoPaths[nn-1].size()==0) {
-//				memoPaths
-				// si ya hay paths, creados
-				// coger el ultimo y poner el punto en el penultimo punto
-				memoPaths[nn-1].addVertex(position);
+			if(nn>0) {
+				if(memoPaths[nn-1].size()==0) {
+	//				memoPaths
+					// si ya hay paths, creados
+					// coger el ultimo y poner el punto en el penultimo punto
+					memoPaths[nn-1].addVertex(position);
+				}
 			}
-			
 		}
 		
         acceleration=acceleration*0;
@@ -261,7 +263,7 @@ class ParticleS
 		ct.a = 100.0;
 		ofSetColor(ct);
 		ofNoFill();
-		ofSetLineWidth(1.5);
+		ofSetLineWidth(4);//1.5);
 		
 		if(bDrawLife) {
 			lifePath.draw();			
