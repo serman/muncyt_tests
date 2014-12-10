@@ -10,7 +10,6 @@
 #include "testApp.h"
 
 void testApp::addParticleOut() {
-	
 	//	float rnd = ofRandom(1.0);
 	//	if(rnd<0.15) {
 	if(ofGetFrameNum()%ratePartic==0) {
@@ -30,8 +29,9 @@ void testApp::addParticleOut() {
 		
 		float masa = ofRandom(3);
 		
-		ParticleX p = ParticleX(p0, v0, cc, masa );
-		particulas.push_back(p);
+		ParticleX pTmp;
+		pTmp.init(p0, v0, cc, masa );
+		particulas.push_back(pTmp);
 		
 		// pos, vel, color, mass, charge
 		//		ParticleX pTmp = ParticleX(ofVec3f(0,ofRandom(ofGetHeight())) , ofVec3f(ofRandom(10.0, 30.0), 0) , ofColor::white, 1.0, 0.0);
@@ -47,8 +47,11 @@ void testApp::updateParticlesX() {
 	// fuerza SOL
 	for(int i=0; i<particulas.size(); i++) {
 //		gravityTowards(ofVec3f& a_target,float a_minDist, float masaAttrac)
-		ofVec3f pSol = ofVec3f(W_WIDTH/2.0, W_HEIGHT/2.0,0);
-		particulas[i].gravityTowards(pSol, 10.0f,  masaSol);	
+
+//		ofVec3f pSol = ofVec3f(W_WIDTH/2.0, W_HEIGHT/2.0,0);
+//		particulas[i].gravityTowards(pSol, 10.0f,  masaSol);
+		ofVec3f ppp = ofVec3f(sol.posScreen.x,sol.posScreen.y,0);
+		particulas[i].gravityTowards(ppp , 10.0f,  sol.masa);	
 	}
 	
 	
@@ -66,14 +69,18 @@ void testApp::updateParticlesX() {
 	}
 	
 	// chequear si han chocado con el Sol
+	// o si estan muy lejos
 	for(int i=particulas.size()-1; i>=0; i--) {
-		ofVec3f pSol = ofVec3f(W_WIDTH/2.0, W_HEIGHT/2.0,0);
+//		ofVec2f pSol = ofVec3f(W_WIDTH/2.0, W_HEIGHT/2.0,0);
+		ofVec3f pSol = ofVec3f(sol.posScreen.x,sol.posScreen.y,0);
 		ofVec2f zDist = ofVec2f(particulas[i].position.x, particulas[i].position.y);
 		zDist-=	pSol;
-		if( zDist.lengthSquared() < (rSol*rSol) ) {
+//		if( zDist.lengthSquared() < (rSol*rSol) ) {
+		if( zDist.lengthSquared() < (sol.radio*sol.radio) ) {
 			// CHOQUE!!!
 			// sumar masa a Sol
-			addMasaSol(600);
+//			addMasaSol(600);
+			sol.addMasa(600);
 			
 			// eliminar particula
 			particulas.erase(particulas.begin()+i);

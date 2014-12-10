@@ -35,5 +35,11 @@ class testApp : public ofBaseApp{
 	int     nPtsDraw;
 
 	
+	bool	modoCross;
+	ofVbo	crossVbo;
+	ofMesh	crossMesh;
+	void	setupCross();
+	void	drawCross();
+	
 	
 };

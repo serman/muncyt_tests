@@ -7,8 +7,15 @@ void testApp::setup(){
 	swWireframe = false;
 	swTexture = true;
 	
+	modo = ENLINEA;
+	
 	// cargar caras
 	cargaCaras();
+	
+	ftracker.setup();
+	
+	tMuestraCara = 1000.0;
+	nCaraAct = 0;
 	
 }
 
@@ -31,6 +38,24 @@ void testApp::cargaCaras() {
 //--------------------------------------------------------------
 void testApp::update(){
 
+	
+	
+	// Analizar FT
+	if( modo == FT2D) {
+	   // Cambio de cara en FT
+		if(	tMuestraCara < (ofGetElapsedTimeMillis()-tLastCara) ) {
+			tLastCara = ofGetElapsedTimeMillis();
+			nCaraAct++;
+			nCaraAct%=caras.size();
+			
+		}
+		
+		
+		// Analizar en FT
+		ftracker.update(ofxCv::toCv(caras[nCaraAct].img));
+	}
+		
+		  
 }
 
 //--------------------------------------------------------------
@@ -49,7 +74,8 @@ void testApp::draw(){
 	
 	float zz = -600;
 	
-	if(swEnLinea) {
+//	if(swEnLinea) {
+	if(modo == ENLINEA) {
 	// EN LINEA
 		for(int i=0; i<nCaras; i++){
 			ofPushMatrix();
@@ -74,7 +100,7 @@ void testApp::draw(){
 			ofPopMatrix();
 		}
 	}
-	else {
+	else if(modo==CIRCULO) {
 	// EN CIRCULO QUE GIRA
 		ofPushMatrix();
 		ofTranslate(ofGetWidth()/2.0, ofGetHeight()/2.0, zz);
@@ -112,7 +138,24 @@ void testApp::draw(){
 		}		
 		ofPopMatrix();
 	}
-	
+	else if(modo==FT2D) {
+		// Dibujar imagen y FT
+		int ladoCara = 500;
+		int px = (ofGetWidth()-ladoCara)/2.0;
+		int py = (ofGetHeight()-ladoCara)/2.0;
+		
+		ofPushMatrix();
+		ofPushStyle();
+		ofTranslate(px,py,0);
+		caras[nCaraAct].img.draw(0,0, ladoCara, ladoCara);
+		ofSetColor(255,255,0);
+		ofSetLineWidth(1.5);
+		ofDisableDepthTest();
+		ftracker.draw(true);
+		ofEnableDepthTest();
+		ofPopStyle();
+		ofPopMatrix();
+	}
 	
 	ofSetColor(255);
 	ofLine(0,ofGetHeight()/2, ofGetWidth(),ofGetHeight()/2);
@@ -128,7 +171,8 @@ void testApp::draw(){
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-	if(key=='m') swEnLinea=!swEnLinea;
+//	if(key=='m') swEnLinea=!swEnLinea;
+	if(key=='m') {modo++;modo%=3;}
 	else if(key=='w') swWireframe=!swWireframe;
 	else if(key=='t') swTexture=!swTexture;
 }

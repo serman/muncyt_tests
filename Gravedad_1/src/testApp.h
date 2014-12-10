@@ -6,9 +6,14 @@
 #include "ofxUI.h"
 
 #include "ParticleX.h"
+#include "Sol.h"
 
 #define W_WIDTH	 768
 #define W_HEIGHT 768
+
+#define MAX_MASA_SOL 18000
+#define INIT_MASA_SOL 7000
+#define DURACION_BLACK_HOLE 15000
 
 class testApp : public ofBaseApp{
 	
@@ -17,22 +22,17 @@ class testApp : public ofBaseApp{
 		void update();
 		void draw();
 
-		void keyPressed  (int key);
-		void keyReleased (int key);
-
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
 		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-		
+		void keyPressed  (int key);
+
+	void mouseMoved(int x, int y );
+	
 		ofTrueTypeFont font;
 	
 		ofVec2f		zentro;
 	
-	
+	float		radioEscena;
+	ofPath		borde;
 	
 	ofMesh	superf, superfOrig;
 	int		superfW, superfH;
@@ -40,11 +40,12 @@ class testApp : public ofBaseApp{
 	void	setupMeshSuperf();
 	void	updateMeshSuperf();
 	
-	float nivelNoise;
+	float	nivelNoise;
+	bool	noiseAuto;
 	
 	bool	swWeb;
-	float gg;	// interact SOL
-	float kk;	// interact user
+	float	gg;	// interact SOL
+	float	kk;	// interact user
 	
 	// helper functions
 	void addFace(ofMesh& mesh, ofVec3f a, ofVec3f b, ofVec3f c);
@@ -80,16 +81,8 @@ class testApp : public ofBaseApp{
 	
 	
 	// SOL
-	ofSpherePrimitive sol;
-	float		rSol;
-	ofVec2f		posSol;
-	float		masaSol;
-	float		densSol;
-	void	initSol(float m);
-	void	addMasaSol(float m);
-	void	setRfromM();
-	void	setMfromR();		
-	void	drawSol();
+	Sol sol;
+	
 	
 	// TUIOS
 	float masaTUIO;
@@ -104,7 +97,7 @@ class testApp : public ofBaseApp{
 	// camara-z
 	float zCam;
 	
-	
+	float lon, lat;
 	
 	
 	// Particulas

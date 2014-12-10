@@ -6,19 +6,29 @@
     <YPosition>0.000000000</YPosition>
 </Canvas>
 <Widget>
+    <Kind>2</Kind>
+    <Name>Noise Auto</Name>
+    <Value>0</Value>
+</Widget>
+<Widget>
     <Kind>4</Kind>
     <Name>nivel_Noise</Name>
-    <Value>7.000000000</Value>
+    <Value>0.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>radio_Sol</Name>
-    <Value>70.373153687</Value>
+    <Value>119.163749695</Value>
+</Widget>
+<Widget>
+    <Kind>4</Kind>
+    <Name>masa_Sol</Name>
+    <Value>14200.000000000</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
     <Name>fuerza_Sol</Name>
-    <Value>10000.000000000</Value>
+    <Value>10147.784179688</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -28,17 +38,12 @@
 <Widget>
     <Kind>4</Kind>
     <Name>masa TUIO</Name>
-    <Value>10000.000000000</Value>
-</Widget>
-<Widget>
-    <Kind>2</Kind>
-    <Name>TOGGLE_Shader</Name>
-    <Value>1</Value>
+    <Value>7290.640625000</Value>
 </Widget>
 <Widget>
     <Kind>2</Kind>
     <Name>TOGGLE_WireFrame</Name>
-    <Value>1</Value>
+    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>2</Kind>
@@ -48,7 +53,7 @@
 <Widget>
     <Kind>2</Kind>
     <Name>TOGGLE_OrthoCamera</Name>
-    <Value>0</Value>
+    <Value>1</Value>
 </Widget>
 <Widget>
     <Kind>2</Kind>
@@ -58,7 +63,7 @@
 <Widget>
     <Kind>2</Kind>
     <Name>TOGGLE_Tex Web</Name>
-    <Value>1</Value>
+    <Value>0</Value>
 </Widget>
 <Widget>
     <Kind>4</Kind>
@@ -68,5 +73,5 @@
 <Widget>
     <Kind>42</Kind>
     <Name>Rate_partics</Name>
-    <Value>30</Value>
+    <Value>91</Value>
 </Widget>

@@ -3,14 +3,30 @@
 //--------------------------------------------------------------
 void testApp::setup(){
 	ofBackground(34, 34, 34);
-	ofSetVerticalSync(false);
+	ofSetVerticalSync(true);
 	
 	ofEnableAlphaBlending();
 	
 	ofSetCircleResolution(60);
 	
 	zentro = ofVec2f(ofGetWidth()/2.0, W_HEIGHT/2.0);
+
+	//
+	// Borde
+	//
+	radioEscena = W_HEIGHT/2;
+	// Borde Negro circular
+	borde.clear();
+	ofColor ctmp = ofColor::black;//red;//black;
+	borde.setFillColor(ctmp);
+	//http://www.openframeworks.cc/documentation/graphics/ofPath.html#show_setPolyWindingMode
+	borde.setPolyWindingMode(OF_POLY_WINDING_ODD);
+	// rectangulo 
+	borde.rectangle(0,0,ofGetWidth(),ofGetHeight());
+	borde.setCircleResolution(60);
+	borde.circle(zentro.x, zentro.y, radioEscena);	
 	
+	// Imagen textura
 	imgTex.loadImage("imagen.jpg");
 	bUseTexture = true;
 	
@@ -35,9 +51,7 @@ void testApp::setup(){
 //	light.setSpecularColor(specular_color);
 	swLight = true;
 	light.enable();
-	
 	swOrtho = false;
-	
 	swWeb = false;
 	
 	float wFBOs = W_HEIGHT;
@@ -62,12 +76,13 @@ void testApp::setup(){
 
 	// Dibujar malla
 	imgWeb.begin();
+	ofBackground(200);
 		ofSetColor(255,255,255);
 //		ofEnableAntiAliasing();
 		ofEnableSmoothing();
 		ofSetLineWidth(1.5);
 		
-		for(int i=0; i<50; i++) {
+		for(int i=0; i<350; i++) {
 			float yAct = (float)i*imgDyn.getHeight()/50.0;
 			float xAct = (float)i*imgDyn.getWidth()/50.0;
 			ofLine(xAct,0, xAct, imgDyn.getHeight());
@@ -84,21 +99,25 @@ void testApp::setup(){
 	kk = 100.0;
 	gg = 10000.0;
 	
-	
 	masaTUIO = 10000;
-
 	
 	nivelNoise = 7;// 60.0;
+	noiseAuto = true;
 	
 	zCam = 446.81;
 //	cam.setAutoDistance(false);
+	
+//	lon = 0;
+//	lat = 90;
+		
 
 	ratePartic = 30;
 
     setupGUI();
-    gui1->loadSettings("guiSettings.xml");
+    gui1->loadSettings("gui1Settings.xml");
 	
-	initSol(7000);
+	sol.init(INIT_MASA_SOL, ofVec3f(0,0,0), ofVec2f(W_WIDTH/2.0, W_HEIGHT/2.0) );
+//	initSol(7000);
 	
 	cam.setDistance(zCam);
 }
@@ -107,7 +126,7 @@ void testApp::setup(){
 
 void testApp::setupMeshSuperf() {
 
-	int skip = 10/2;	// this controls the resolution of the mesh
+	int skip = 10;///2;	// this controls the resolution of the mesh
 	
 	superfW = W_WIDTH;
 	superfH = W_HEIGHT;
@@ -154,6 +173,7 @@ void testApp::setupMeshSuperf() {
 	
     mat1Color.setBrightness(250.f);
     mat1Color.setSaturation(200);
+	mat1.setAmbientColor(mat1Color);
 	
 	
 }
@@ -166,6 +186,9 @@ void testApp::update(){
 
 	// particulas
 	updateParticlesX();
+	
+	// Sol
+	sol.update();
 	
 	// dibujar particulas en textura
 	// preparar mezcla de imagenes
@@ -180,17 +203,10 @@ void testApp::update(){
 			imgWeb.draw(0,0);
 		}
 		else {
-		// fondo blanco
-		ofSetColor(255);
-		ofRect(0,0, imgMix.getWidth(), imgMix.getHeight());
+			// fondo blanco
+			ofSetColor(150);
+			ofRect(0,0, imgMix.getWidth(), imgMix.getHeight());
 		}
-		
-		// test draw
-		ofPushStyle();
-		ofSetColor(0,0,255);
-		ofLine(0,0, imgMix.getWidth(), imgMix.getHeight()); 
-		ofPopStyle();
-		
 		
 		ofEnableDepthTest();
 		
@@ -199,17 +215,17 @@ void testApp::update(){
 		
 		drawParticlesX();
 		
-		//		ofDisableBlendMode();	
 	}
 	imgMix.end();	
 
 
 	// eliminar las particulas que ya han chocado contra el sol o que se han ido muy lejos
 	
-	
 }
 
 void testApp::updateMeshSuperf(){
+	
+	if(noiseAuto) nivelNoise = ofMap(sol.masa, INIT_MASA_SOL, MAX_MASA_SOL, 0,100);
 	
 	float time = ofGetElapsedTimef();	//Get time
 	
@@ -223,21 +239,19 @@ void testApp::updateMeshSuperf(){
 			
 			//Get Perlin noise value 
 			float value = ofNoise( x * 0.05, y * 0.05, time * 0.5 ); 
-			//Change z-coordinate of vertex
-			p.z = 0;
-			p.z -= value * nivelNoise; 
-			//p.z = -value; //37.0;
 			
+			//Change z-coordinate of vertex
+			p.z = -value * nivelNoise; 
+			//p.z = -value; //37.0;
 			
 			//
 			// - - - - ATRACCION SOL - - - - 
 			//
 //			p.z = value * 100; 
 			float rho2 = p.x*p.x+p.y*p.y;
-//			float var = 20+10*sin(time*0.5);
-			float var = 20;
+			float var = 20+5*sin(time*0.5);
+//			float var = 20;
 //			p.z += 100.0*exp(-rho2/(2*var*var));
-			
 			
 			// asignar altura 
 			// y color segun la altura
@@ -248,7 +262,7 @@ void testApp::updateMeshSuperf(){
 				p.z -= gg/rho;
 				float ccv = ofMap(p.z,0,-500, 1.0, 0.0);
 //				cc = ofFloatColor(ccv,1-ccv,ccv, 1.0);
-				cc = ofFloatColor(ccv,ccv,ccv, 1.0);
+				cc = ofFloatColor(abs(1-ccv),abs(1-ccv),ccv, 1.0);
 				
 //				float angDir = atan2(p.y, p.x);	// radianes
 //				p.x -= 100*kk / rho * cos(angDir);
@@ -270,6 +284,8 @@ void testApp::updateMeshSuperf(){
 			
 			float dx = p.x-ptInteract.x;
 			float dy = p.y+ptInteract.y;
+			
+			var = 80;
 			
 			float rhoZ2 = dx*dx+dy*dy;
 			p.z -= 150.0*exp(-rhoZ2/(2*var*var));
@@ -307,15 +323,21 @@ void testApp::updateFBO() {
 		// lineas alrededor de la bola central. 
 		// Varian segun el radio que tenga el circulo == radio^2 / dist
 		
-		ofSetColor(255,0,0);
+		ofColor cLin = ofColor(39,81,227);
+//		ofLogNotice() << cLin.getBrightness();
+//		ofLogNotice() << cLin.getSaturation();
+		cLin.setBrightness(255);
+		cLin.setSaturation(0);
+		ofSetColor(cLin);	// 0x2751E3 (AZUL GUAY)
 		ofSetLineWidth(1.0);
 		ofNoFill();
 		
-		float baseSol = rSol/10000.0;
+		float baseSol = sol.radio/10000.0;
 		ofPushMatrix();
 		
 		ofTranslate(imgDyn.getWidth()/2.0, imgDyn.getHeight()/2.0, 0 );
 		//		int lim = ofGetHeight()/2.0*floor(
+		// L’neas Circulares
 		for(float i=0.1; i<10.0; i+=0.3) {
 			float vPot = i*baseSol;
 			float rPot = 1/vPot;
@@ -324,16 +346,20 @@ void testApp::updateFBO() {
 			ofCircle(0,0, rPot);
 			ofDisableSmoothing();
 		}
+		
+		// L’neas Radiales
+		for(int i=0; i<16; i++) {
+			float ang = (float) TWO_PI/32.0*i;
+			float cang = cos(ang)*imgDyn.getWidth();
+			float sang = sin(ang)*imgDyn.getWidth();
+			ofLine(-cang, -sang, cang, sang);
+		}
+		
 		ofPopMatrix();
 		
 		
 		// lineas alrededor de los pts de interaccion (mouse, TUIOs):	vector<ofVec2f> ptsInter
-		//		for(int i=0; i<10; i++) {
-		//			
-		//			
-		//		}
-		
-		
+
 		
 	}
 	
@@ -344,37 +370,71 @@ void testApp::updateFBO() {
 //--------------------------------------------------------------
 void testApp::draw(){
 
-
-
 	
-//		ofLogNotice("***"+ofToString(superf.getMode()));
-
-//		imgWeb.draw(ofGetWidth()-200,0,200,200);
-//		imgDyn.draw(ofGetWidth()-200,300,200,200);
-//		imgMix.draw(ofGetWidth()-200,ofGetHeight()-200,200,200);
+// De ejemplo de OF MeshFromCamera
+//	float rotateAmount = ofMap(ofGetMouseY(),0,ofGetHeight(), -90,90);
+//	ofVec3f rotateDir = ofVec3f(1,0,0);
+	float rotateAmount = 0;
+	ofVec3f rotateDir = ofVec3f(1,0,0);
+	if(ofGetMousePressed(0)) {
 	
-	cam.begin();
-//			if(!swOrtho) cam.setDistance(zCam);
-	//	cam.enableOrtho();
-		ofEnableAlphaBlending();
-		if(swLight) ofEnableLighting();
-		ofEnableDepthTest();
+		rotateAmount = 10; //ofMap(ofGetMouseY(),0,ofGetHeight(), -90,90);
+		ofVec3f posTouch = ofVec3f(ofGetMouseX()-zentro.x, ofGetMouseY()-zentro.y, 0.0);
+		posTouch.normalize();
+		rotateDir = ofVec3f(0,0,1).cross(posTouch);
+	}
+
+	float extrusionAmount = 300.0;
+	
+	// Situar la camara
+	ofVec3f camDirection(0,0,1);
+	ofVec3f centre = sol.pos3D;
+//	ofVec3f camDirectionRotated = camDirection.rotated(rotateAmount, ofVec3f(1,0,0));
+	ofVec3f camDirectionRotated = camDirection.rotated(rotateAmount, rotateDir);
+	ofVec3f camPosition = centre + camDirectionRotated * extrusionAmount;
+	
+	camera.setPosition(camPosition);
+	camera.lookAt(centre);
+	
+//	if(swOrtho) {
+//		ofEnableDepthTest();
+//	}
+	
+	
+	
+	
+//	cam.begin();
+	camera.begin();
+
+//	if(!swOrtho) cam.setDistance(zCam);
+//	else	cam.enableOrtho();
+	if(swOrtho) camera.enableOrtho();
+	else camera.disableOrtho();
 		
-		mat1.begin();
+
+	ofEnableAlphaBlending();
+	ofEnableDepthTest();
+	if(swLight) ofEnableLighting();
 		
-		if(swOrtho) ofTranslate(zentro.x, zentro.y,0);
-		
-		//img.bind();
+	ofPushMatrix();
+	if(swOrtho) {
+		ofTranslate(zentro.x, zentro.y,0);
+	}
+	else {
+		ofTranslate(0,0, -260);		
+	}
+//	ofTranslate(zentro.x, zentro.y,0);
+
+	mat1.begin();
+	
 	if(bUseTexture) {
 		ofEnableNormalizedTexCoords();
-//			imgWeb.getTextureReference().bind();
-//			imgDyn.getTextureReference().bind();
 		imgMix.getTextureReference().bind();
 	}
 		
 	if(swLight) {
 		light.enable();
-		light.draw();
+//		light.draw();
 	}
 	if(swWireFrame) {
 		superf.drawWireframe();
@@ -382,39 +442,53 @@ void testApp::draw(){
 	else {
 		superf.draw();
 	}
-	//img.unbind();
+	
 	if(bUseTexture) {
-//				imgWeb.getTextureReference().unbind();
-//				imgDyn.getTextureReference().unbind();
 		imgMix.getTextureReference().unbind();
 		ofDisableNormalizedTexCoords();
 	}
 	
-	
-//		superfOrig.drawWireframe();
+	// Dibujar bolas de las part’culas:
+	ofPushMatrix();
+	ofTranslate(-(W_WIDTH)/2.0, -ofGetHeight()/2.0, -60);
+//	ofTranslate(-ofGetMouseX(), -ofGetHeight()/2.0, -60);
+	for(int i=0; i<particulas.size(); i++) {
+		particulas[i].draw3D();		
+	}
+	ofPopMatrix();
 	
 	// Dibujar esfera central
-//			ofSphere(0,0, radioEsfera);	// deprecated
-	drawSol();
+	ofDisableAlphaBlending();
+	sol.draw();
+	ofEnableAlphaBlending();
 	
 	
 	if(swLight) 	light.disable();
 	
-	mat1.end();
+	mat1.end();	
+	
+//	if(swOrtho) {
+	ofPopMatrix();
+//	}
+	
 	
 	ofDisableAlphaBlending();
 	if(swLight) ofDisableLighting();
 	
-	cam.end();
+//	cam.end();
+	camera.end();
+//	if(swOrtho) ofDisableDepthTest();
 
-//	imgWeb.draw(ofGetWidth()-200,0,200,200);
-//	imgDyn.draw(ofGetWidth()-200,300,200,200);
-//	imgMix.draw(ofGetWidth()-200,ofGetHeight()-200,200,200);
+	ofDisableDepthTest();
+	
+	borde.draw();
+	
 	
 	ofPushStyle();
 	ofSetColor(255,0,0);
+	ofDrawBitmapString("fov: " + ofToString(camera.getFov()), 10, ofGetHeight()-110);
 	ofDrawBitmapString("fr: " + ofToString(ofGetFrameRate()), 10, ofGetHeight()-90);
-	ofDrawBitmapString("masa Sol: " + ofToString(masaSol), 10, ofGetHeight()-70);
+	ofDrawBitmapString("masa Sol: " + ofToString(sol.masa), 10, ofGetHeight()-70);
 	ofDrawBitmapString("num Partics: " + ofToString(particulas.size()), 10, ofGetHeight()-50);
 	ofPopStyle();
 }
@@ -424,11 +498,6 @@ void testApp::keyPressed  (int key){
 	if( key == 's' ){
 		gui1->saveSettings("gui1Settings.xml");
 	}	
-}
-
-//--------------------------------------------------------------
-void testApp::keyReleased(int key){ 
-	
 }
 
 //--------------------------------------------------------------
@@ -451,33 +520,8 @@ void testApp::mouseMoved(int x, int y ){
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
-	
-}
-
-//--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 	
-}
-
-//--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-
 }
 
 // - - - - GUI - - - - 
@@ -489,11 +533,13 @@ void testApp::setupGUI() {
     
 //    gui1->addSpacer();
 	gui1->addLabel("Noisy waves");
+	gui1->addToggle("Noise Auto", &noiseAuto);
 	gui1->addSlider("nivel_Noise", 0, 100.0, &nivelNoise);
 	
 	gui1->addSpacer();
 	gui1->addLabel("Sol");
-	gui1->addSlider("radio_Sol", 10, 250.0, &rSol);
+	gui1->addSlider("radio_Sol", 10, 250.0, &sol.radio);
+	gui1->addSlider("masa_Sol", 1000, MAX_MASA_SOL*1.5, &sol.masa);
     
 	gui1->addSpacer();
 	gui1->addSlider("fuerza_Sol", 0, 20000.0, &gg);
@@ -527,10 +573,8 @@ void testApp::guiEvent(ofxUIEventArgs &e) {
 //	cout << "got event from: " << name << endl;
 	if(name == "radio_Sol")
 	{
-		ofxUISlider *slider = (ofxUISlider *) e.widget;
-		rSol = slider->getScaledValue();
-		sol.setRadius(rSol);
-		setMfromR();
+		ofxUISlider *slider = (ofxUISlider *) e.widget;		
+		sol.setRadio(slider->getScaledValue());
 	}
 	else if(name == "cam_z")
 	{
@@ -542,8 +586,14 @@ void testApp::guiEvent(ofxUIEventArgs &e) {
 	{	// swOrtho
 		ofxUIToggle *toggle = (ofxUIToggle *) e.getToggle();
 		swOrtho = toggle->getValue();
-		if(swOrtho) cam.enableOrtho();
-		else cam.disableOrtho();
+		if(swOrtho) {
+			cam.enableOrtho();
+			camera.enableOrtho();			
+		}
+		else {
+			cam.disableOrtho();
+			camera.disableOrtho();
+		}
 	}
 	
 }

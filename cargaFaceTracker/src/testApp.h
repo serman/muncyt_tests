@@ -3,6 +3,10 @@
 #include "ofMain.h"
 #include "Cara.h"
 
+#include "ofxFaceTrackerThreaded.h"
+
+#define TMUESTRACARA 1000;
+
 
 class testApp : public ofBaseApp{
 
@@ -28,8 +32,18 @@ class testApp : public ofBaseApp{
 	bool	swWireframe;
 	bool	swTexture;
 	
+	enum modos {ENLINEA, CIRCULO, FT2D};
+	int		modo;
+
+	enum modosDraw {WIREFRAME, HILO, FACETS};
+	
 		Cara	cara;
 
 		vector<Cara> caras;
 	
+		ofxFaceTrackerThreaded ftracker;
+		
+		int tLastCara;
+		int tMuestraCara;
+		int nCaraAct;
 };

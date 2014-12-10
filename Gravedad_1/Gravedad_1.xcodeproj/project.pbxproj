@@ -15,7 +15,6 @@
 		7F2682D619ABFCF5000C6EFC /* noise.frag in Sources */ = {isa = PBXBuildFile; fileRef = 7F2682CE19ABFCF5000C6EFC /* noise.frag */; };
 		7F2682D719ABFCF5000C6EFC /* noise.vert in Sources */ = {isa = PBXBuildFile; fileRef = 7F2682CF19ABFCF5000C6EFC /* noise.vert */; };
 		7F3157F119D2D9E1001A3970 /* testApp_particulasMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F3157F019D2D9E1001A3970 /* testApp_particulasMgr.cpp */; };
-		7F76097A19D4215C008BA7B9 /* testApp_SolMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F76097919D4215C008BA7B9 /* testApp_SolMgr.cpp */; };
 		7FE75DCA19D1C908001A98A1 /* ofxUI2DGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE75D3219D1C908001A98A1 /* ofxUI2DGraph.cpp */; };
 		7FE75DCB19D1C908001A98A1 /* ofxUI2DPad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE75D3419D1C908001A98A1 /* ofxUI2DPad.cpp */; };
 		7FE75DCC19D1C908001A98A1 /* ofxUIBaseDraws.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FE75D3619D1C908001A98A1 /* ofxUIBaseDraws.cpp */; };
@@ -127,7 +126,6 @@
 		7F2682D119ABFCF5000C6EFC /* verdana.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = verdana.ttf; sourceTree = "<group>"; };
 		7F31577719D24B2E001A3970 /* ParticleX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleX.h; sourceTree = "<group>"; };
 		7F3157F019D2D9E1001A3970 /* testApp_particulasMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testApp_particulasMgr.cpp; sourceTree = "<group>"; };
-		7F76097919D4215C008BA7B9 /* testApp_SolMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testApp_SolMgr.cpp; sourceTree = "<group>"; };
 		7FE75D3119D1C908001A98A1 /* ofxUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUI.h; sourceTree = "<group>"; };
 		7FE75D3219D1C908001A98A1 /* ofxUI2DGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxUI2DGraph.cpp; sourceTree = "<group>"; };
 		7FE75D3319D1C908001A98A1 /* ofxUI2DGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUI2DGraph.h; sourceTree = "<group>"; };
@@ -228,6 +226,7 @@
 		7FE75D9419D1C908001A98A1 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		7FE75D9619D1C908001A98A1 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxXmlSettings.cpp; sourceTree = "<group>"; };
 		7FE75D9719D1C908001A98A1 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
+		7FFF7ABE1A002E8A00BB560F /* Sol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sol.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -546,8 +545,8 @@
 			isa = PBXGroup;
 			children = (
 				7F31577719D24B2E001A3970 /* ParticleX.h */,
+				7FFF7ABE1A002E8A00BB560F /* Sol.h */,
 				7F3157F019D2D9E1001A3970 /* testApp_particulasMgr.cpp */,
-				7F76097919D4215C008BA7B9 /* testApp_SolMgr.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
@@ -710,7 +709,6 @@
 				7FE75DF819D1C908001A98A1 /* tinyxmlparser.cpp in Sources */,
 				7FE75DF919D1C908001A98A1 /* ofxXmlSettings.cpp in Sources */,
 				7F3157F119D2D9E1001A3970 /* testApp_particulasMgr.cpp in Sources */,
-				7F76097A19D4215C008BA7B9 /* testApp_SolMgr.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

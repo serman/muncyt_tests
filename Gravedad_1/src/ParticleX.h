@@ -51,33 +51,13 @@ class ParticleX
 	
 	bool	bDrawLife;
 	bool	bDrawMemoPath;
+
+	ofSpherePrimitive esfera;
+
 	
-    ParticleX() ;
-//    
-//    ParticleX( ofVec3f _position , ofColor _color, float mass = 1.0, float charge = 0.0 )
-//    {
-//        position = _position ;
-//        color = _color ;
-//		color_orig = color;
-//		colorExcited = color;
-//		m = mass;
-//		q = charge;
-//		
-//		position_prev = position;
-//		
-//		positions.push_back(position);
-//		
-//		angle = 0;
-//		
-//        velocity = ofVec3f ( ofRandom ( -2 , 2 ) , ofRandom ( -2 , 2 ) , ofRandom ( -2 , -2 ) ) ;
-//        spawnPoint = _position ;
-//        recentlyUsed=0;
-//		
-//		setupPaths();
-//		
-//    };
+    ParticleX() {};
 	
-    ParticleX( ofVec3f _position , ofVec3f _vel , ofColor _color, float mass = 1.0, float charge = 0.0 )
+    void init( ofVec3f _position , ofVec3f _vel , ofColor _color, float mass = 1.0, float charge = 0.0 )
     {
         position = _position ;
         color = _color ;
@@ -96,6 +76,8 @@ class ParticleX
         recentlyUsed=0;
 
 		setupPaths();
+		
+		esfera.setRadius(10);
     };
 	
 	void setupPaths() {
@@ -108,17 +90,28 @@ class ParticleX
 		
 	}
 
+	float getAngleRad(ofVec2f pRef) {
+		// Devuelve entre 0 y TWO_PI
+		
+		float angRad = atan2(position.y-pRef.y, position.x-pRef.x);
+		if(angRad<0) angRad+=PI;
+		
+		return angRad; 
+	}
+	
     void update(){
+		float dt =0.5;
+		
 		position_prev = position;
 		
-    	velocity += acceleration/m;
+    	velocity += acceleration/m*dt;
 		
 		// muy graciosete:
 		//	https://sites.google.com/site/ofauckland/examples/curly-moving-particles		
 //		angle += ofSignedNoise(position.x, position.y)*PI;
 //		velocity.rotate(angle, ofVec3f(0,0,1));		
 		
-        position += velocity;
+        position += velocity*dt;
 		
 		positions.push_back(position);
 		if(positions.size() > 10) {
@@ -141,7 +134,7 @@ class ParticleX
 
 		ofSetColor(color);
 		ofNoFill();
-		ofSetLineWidth(1);
+		ofSetLineWidth(5);
 		
 		if(bDrawLife) {
 			lifePath.draw();			
@@ -169,9 +162,17 @@ class ParticleX
 			ofPopStyle();
 		}
 
-		
 //		ofPopMatrix();
 		ofPopStyle();
+	}
+	
+	void draw3D() {
+		
+		ofPushMatrix();
+			ofTranslate(position.x, position.y, 0);
+			esfera.draw();
+		ofPopMatrix();
+		
 	}
 	
 	void drawMemoPath() {
